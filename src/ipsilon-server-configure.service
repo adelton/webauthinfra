@@ -1,0 +1,11 @@
+[Unit]
+Description=Configure Ipsilon IdP server
+After=ipa-client-enroll.service
+After=ipa.service
+After=ipa-server-configure-first.service
+After=ipa-server-update-self-ip-address.service
+Before=ipa-precreate-hosts.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ipsilon-server-configure

@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# On the authentication HTTP server, configure the IP address of the
+# backend container, setup SSSD's InfoPipe, and initialize the default
+# Apache HTTP server's config in /data/www.conf.
+
+set -e
+
+exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+
+set -x
+echo "$(dig +short @127.0.0.11 app.example.test) app.example.test" >> /etc/hosts
+
+if ! grep -q 'services.*ifp' /etc/sssd/sssd.conf ; then
+	sed -i -e '/^\[domain/aldap_user_extra_attrs = mail, firstname:givenname, lastname:sn' \
+		-e 's/services.*/&, ifp/' \
+		-e '/^\[ifp/aallowed_uids = apache, root\nuser_attributes = +mail, +firstname, +lastname' /etc/sssd/sssd.conf
+	systemctl restart sssd
+fi
+
+if ! [ -f /data/www.conf ] ; then
+	cp -f /etc/httpd/conf.d/www-default.conf.sample /data/www.conf
+fi
+systemctl restart httpd

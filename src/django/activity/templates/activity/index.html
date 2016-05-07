@@ -1,0 +1,48 @@
+{% extends "activity/base.html" %}
+
+{% block content %}
+{% if user.username %}
+<table>
+    <thead>
+        <tr><th>Attribute</th><th>Value</th></tr>
+    </thead>
+    <tbody>
+    {% if user.username %}
+        <tr><td>Username</td><td>{{ user.username }}</td></tr>
+    {% endif %}
+    {% if user.first_name %}
+        <tr><td>First name</td><td>{{ user.first_name }}</td></tr>
+    {% endif %}
+    {% if user.last_name %}
+        <tr><td>Last name</td><td>{{ user.last_name }}</td></tr>
+    {% endif %}
+    {% if user.email %}
+        <tr><td>Email</td><td>{{ user.email }}</td></tr>
+    {% endif %}
+    {% if user_groups %}
+        <tr><td>Member of groups</td><td>{% for g in user_groups %}{{ g }}{%if forloop.last%}.{%else%}, {%endif%}{% endfor %}</td></tr>
+    {% endif %}
+    {% if user_permissions %}
+        <tr><td>Permissions</td><td>{% for p in user_permissions %}{{ p }}{%if forloop.last%}.{%else%}, {%endif%}{% endfor %}</td></tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endif %}
+{% if user.username and activity_list %}
+<hr/>
+{% endif %}
+{% if activity_list %}
+    <table>
+    <thead>
+        <tr><th>User</th><th>Last logon time</th></tr>
+    </thead>
+    <tbody>
+    {% for user in activity_list %}
+        <tr><td>{{ user.username }}</td><td>{{ user.last_login }}</td></tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    <p>No activity recorded.</p>
+{% endif %}
+{% endblock %}

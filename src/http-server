@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# Single-purpose HTTP server can only run http-klist-kinit-kpasswd as
+# user developer, to allow managing the credential cache and changing
+# passwords via Web form.
+
+import BaseHTTPServer, CGIHTTPServer
+from subprocess import Popen, PIPE
+import pwd
+
+class MyCGIHTTPRequestHandler(CGIHTTPServer.CGIHTTPRequestHandler):
+    def is_cgi(self):
+        self.cgi_info = '/usr/local/bin/', 'http-klist-kinit-kpasswd'
+        return True
+
+CGIHTTPServer.nobody = pwd.getpwnam('developer')[2]
+
+def run(server_class=BaseHTTPServer.HTTPServer,
+        handler_class=MyCGIHTTPRequestHandler):
+    server_address = ('', 80)
+    httpd = server_class(server_address, handler_class)
+    httpd.serve_forever()
+
+run()

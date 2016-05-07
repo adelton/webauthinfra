@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# Generate SSH key which can be used to ssh into the client container.
+
+set -e
+
+exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+
+if [ -f /data/id_rsa ] ; then
+	echo "The ssh key was already generated on $HOSTNAME."
+else
+	(
+	set -x
+	ssh-keygen -t rsa -f /data/id_rsa -N ''
+	)
+fi
+
+(
+set -x
+cp /data/id_rsa.pub /home/developer/.ssh/authorized_keys
+chmod +r /data/id_rsa
+)
+
+cat <<EOF
+
+Usage:
+  ssh -X -i client-data/id_rsa -p 55022 developer@localhost firefox -no-remote
+  To kinit, in the browser started with ^^^ visit http://localhost/
+  or execute
+  cat ipa-data/admin-password | ssh -i client-data/id_rsa -p 55022 developer@localhost kinit admin
+
+EOF

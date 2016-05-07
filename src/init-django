@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# Setup admin password for the example Django application and for
+# standalone setup, run HTTP server with the application.
+#
+# This script can be run both as ENTRYPOINT (when the application is
+# run on separate container and is the single process running there)
+# and as systemd service (when the application is run under Apache
+# HTTP server / mod_wsgi).
+
+set -e
+
+if [ "$$" -eq 1 ] ; then
+	if ! [ -s /etc/machine-id ] ; then
+		uuidgen | sed 's/-//g' > /etc/machine-id
+	fi
+	for i in /run/* /tmp/* ; do
+		if [ -e "$i" -a "$i" != '/run/secrets' ] ; then
+			rm -rf "$i"
+		fi
+	done
+
+	systemd-tmpfiles --remove --create
+else
+	exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+fi
+
+cd /
+
+DATA=/data
+
+if ! [ -f $DATA/admin-password ] ; then
+	(
+	set -x
+	echo password$RANDOM > $DATA/admin-password
+	)
+fi
+
+if ! [ -d $DATA/db -a -f $DATA/secret-key ] ; then
+	mkdir -p $DATA/db
+	(
+	set -x
+	cp -p /var/www/django/project/db.sqlite3 $DATA/db
+	)
+	if id apache &> /dev/null ; then
+		(
+		set -x
+		chown -R apache $DATA/db
+		)
+	fi
+
+	(
+	cd /var/www/django
+	[ -e bin/activate ] && source bin/activate
+	(
+	set -x
+	cd $PWD/project
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.test', '$( cat $DATA/admin-password )')" | python manage.py shell > /dev/null
+
+	grep '^SECRET_KEY' project/settings.py > $DATA/secret-key
+	)
+	)
+else
+	(
+	set -x
+	cat $DATA/secret-key >> /var/www/django/project/project/settings.py
+	)
+fi
+
+if [ "$$" -eq 1 ] ; then
+	cd /var/www/django && source bin/activate && (
+		set -x
+		cd $PWD/project && REMOTE_USER_VAR=HTTP_X_REMOTE_USER python manage.py runserver "$HOSTNAME:80"
+	)
+fi

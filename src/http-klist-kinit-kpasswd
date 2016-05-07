@@ -1,0 +1,207 @@
+#!/usr/bin/python
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# CGI application which allows managing the credential cache
+# and changing passwords via simple Web form.
+
+print "Status: 200"
+print "Content-type: text/html"
+print "Pragma: no-cache"
+print
+
+import cgi
+from subprocess import Popen, PIPE
+
+import cgitb
+cgitb.enable()
+
+form = cgi.FieldStorage()
+
+username = form.getfirst("username")
+
+kinit = form.getfirst("kinit")
+password = form.getfirst("password")
+
+kdestroy = form.getfirst("kdestroy")
+
+kpasswd = form.getfirst("kpasswd")
+old_password = form.getfirst("old_password")
+new_password = form.getfirst("new_password")
+
+kinit_status = None
+kinit_output = None
+kdestroy_status = None
+kdestroy_output = None
+kpasswd_status = None
+kpasswd_output = None
+
+if kinit:
+    if not username or not password:
+        kinit_output = "Please specify both username and password."
+    else:
+        proc = Popen([ 'kinit', username ], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        kinit_stdout, kinit_stderr = proc.communicate(input="%s\n" % password)
+        kinit_output = kinit_stdout + kinit_stderr
+        kinit_status = proc.returncode
+
+elif kdestroy:
+    proc = Popen([ 'kdestroy', '-A' ], stdout=PIPE, stderr=PIPE)
+    kdestroy_stdout, kdestroy_stderr = proc.communicate()
+    kdestroy_output = kdestroy_stdout + kdestroy_stderr
+    kdestroy_status = proc.returncode
+
+elif kpasswd:
+    if not username or not old_password or not new_password:
+        kpasswd_output = "Please specify username and old and new passwords."
+    else:
+        proc = Popen([ 'kpasswd', username ], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        kpasswd_stdout, kpasswd_stderr = proc.communicate(input="%s\n%s\n%s\n" % (old_password, new_password, new_password))
+        kpasswd_output = kpasswd_stdout + kpasswd_stderr
+        kpasswd_status = proc.returncode
+
+print """<html>
+<head>
+  <title>Kerberos setup</title>
+  <style>
+    .error {
+        border: 1px solid red;
+        background-color: #FFF0F0;
+    }
+    .ok {
+        border: 1px solid green;
+        background-color: #F0FFF0;
+    }
+    p.ok, p.error {
+	padding: 0.5ex 0.5em;
+    }
+    pre {
+	border: 1px solid grey;
+        background-color: #F0F0F0;
+	padding: 0.5ex 0.5em;
+    }
+  </style>
+</head>
+<body>
+"""
+
+print """
+<h1>Kerberos authentication and passwords</h1>
+"""
+
+print """
+<h2>Current credentials cache</h2>
+"""
+
+proc = Popen([ 'klist' ], stdout=PIPE, stderr=PIPE)
+klist_stdout, klist_stderr = proc.communicate()
+print "<pre>%s</pre>" % (cgi.escape(klist_stdout + klist_stderr))
+
+print """
+<form method="get" action="/"><input type="submit" value="Refresh klist"/></form>
+"""
+
+print "<hr/>"
+
+print """
+<h2>Run <tt>kinit</tt></h2>
+"""
+
+result = "ok"
+if kinit_output:
+    pre = 'pre'
+    if kinit_status == None or kinit_status > 0:
+        result = "error"
+    if kinit_status == None:
+        pre = 'p'
+    print "<%s class='%s'>%s</%s>" % (pre, result, cgi.escape(kinit_output), pre)
+    if kinit_status > 0:
+        print "<p class='error'>kinit failed with exit status %s.</p>" % kinit_status
+
+print """
+<form method="post" action="/">
+<input type="hidden" name="kinit" value="kinit"/>
+<p>
+<label for="username">User:</label>
+<input type="text" id="username" name="username" value="%s"/>
+</p>
+<p>
+<label for="password">Password:</label>
+<input type="password" id="password" name="password"/>
+</p>
+<p>
+<input type="submit" name="kinit" value="Run kinit"/>
+</p>
+</form>
+""" % cgi.escape(username or '')
+
+print "<hr/>"
+
+print """
+<h2>Purge the credential cache with <tt>kdestroy -A</tt></h2>
+"""
+
+result = "ok"
+if kdestroy_status != None:
+    if kdestroy_status > 0:
+        result = "error"
+    if kdestroy_output:
+        print "<pre class='%s'>%s</pre>" % (result, cgi.escape(kdestroy_output))
+    elif kdestroy_status:
+        print "<p class='%s'>kdestroy failed with exit status %s.</p>" % (result, kdestroy_status)
+    else:
+        print "<p class='%s'>kdestroy has passed.</p>" % result
+
+print """
+<form method="post" action="/">
+<input type="hidden" name="kdestroy" value="kdestroy"/>
+<p>
+<input type="submit" name="kdestroy" value="Run kdestroy -A"/>
+</p>
+</form>
+"""
+
+print "<hr/>"
+
+print """
+<h2>Change password with <tt>kpasswd</tt></h2>
+"""
+
+result = "ok"
+if kpasswd_output:
+    pre = 'pre'
+    if kpasswd_status == None or kpasswd_status > 0:
+        result = "error"
+    if kpasswd_status == None:
+        pre = 'p'
+    print "<%s class='%s'>%s</%s>" % (pre, result, cgi.escape(kpasswd_output), pre)
+    if kpasswd_status > 0:
+        print "<p>kpasswd failed with exit status %s.</p>" % kpasswd_status
+
+print """
+<form method="post" action="/">
+<input type="hidden" name="kpasswd" value="kpasswd"/>
+<p>
+<label for="username">User:</label>
+<input type="text" id="username" name="username" value="%s"/>
+</p>
+<p>
+<label for="old_password">Old password:</label>
+<input type="password" id="old_password" name="old_password"/>
+</p>
+<p>
+<label for="new_password">New password:</label>
+<input type="password" id="new_password" name="new_password"/>
+</p>
+<p>
+<input type="submit" name="kpasswd" value="Run kpasswd"/>
+</p>
+</form>
+""" % cgi.escape(username or '')
+
+print """
+</body>
+</html>
+"""

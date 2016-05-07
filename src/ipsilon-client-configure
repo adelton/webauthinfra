@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# Register the machine as Ipsilon client, for SAML configuration.
+# The resulting ipsilon-saml.conf is discarded though -- use
+# src/www-proxy-saml.conf or src/www-mod_wsgi-saml.conf instead.
+
+set -e
+
+exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+
+if [ -f /etc/httpd/saml2/$HOSTNAME/metadata.xml ] ; then
+	echo "Ipsilon client is already configured on $HOSTNAME."
+	exit
+fi
+
+SERVER_METADATA=https://ipa.example.test/idp/saml2/metadata
+
+i=0
+while ! curl -fs $SERVER_METADATA &> /dev/null ; do
+	if [ "$(( i % 20 ))" -eq 0 ] ; then
+		echo "Waiting for Ipsilon IdP server ..."
+	fi
+	i=$(( i + 1 ))
+	sleep 1
+done
+
+set -x
+
+curl -o /tmp/admin-password -fs http://ipa.example.test/pub/admin-password
+ipsilon-client-install --saml-idp-metadata $SERVER_METADATA --saml-auth /app/saml-login --saml-sp-name app --saml-idp-url https://ipa.example.test/idp/ --saml-sp-name app --admin-password /tmp/admin-password --no-saml-soap-logout
+mkdir -p /var/www/html/pub
+rm -f /var/www/html/pub/metadata.xml
+cp -f /etc/httpd/saml2/$HOSTNAME/metadata.xml /var/www/html/pub/metadata.xml
+chmod a+r /var/www/html/pub/metadata.xml
+(
+set +e
+cd /etc/httpd/conf.d && diff -u ipsilon-saml.conf www-proxy-saml.conf.sample ; rm -f ipsilon-saml.conf
+)

@@ -1,0 +1,54 @@
+FROM fedora:23
+RUN dnf install -y /usr/sbin/ipa-client-install /usr/bin/ipsilon-client-install ipsilon-saml2 httpd mod_ssl mod_auth_gssapi mod_intercept_form_submit mod_lookup_identity sssd-dbus /usr/bin/xargs && dnf clean all
+RUN dnf upgrade -y https://kojipkgs.fedoraproject.org/packages/mod_lookup_identity/0.9.4/1.fc23/x86_64/mod_lookup_identity-0.9.4-1.fc23.x86_64.rpm https://kojipkgs.fedoraproject.org/packages/mod_intercept_form_submit/1.0.1/1.fc23/x86_64/mod_intercept_form_submit-1.0.1-1.fc23.x86_64.rpm && dnf clean all
+COPY init-data ipa-client-enroll ipsilon-client-configure populate-data-volume www-setup-apache /usr/sbin/
+RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/ipsilon-client-configure /usr/sbin/populate-data-volume /usr/sbin/www-setup-apache
+COPY ipa-client-enroll.service ipsilon-client-configure.service populate-data-volume.service www-setup-apache.service /usr/lib/systemd/system/
+RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/ipsilon-client-configure.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/populate-data-volume.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/www-setup-apache.service /usr/lib/systemd/system/default.target.wants/
+COPY app.pam-service /etc/pam.d/webapp
+COPY volume-data-list /etc/
+COPY www-proxy-gssapi.conf /etc/httpd/conf.d/www-proxy-gssapi.conf.sample
+COPY www-proxy-saml.conf /etc/httpd/conf.d/www-proxy-saml.conf.sample
+RUN ln -s www-proxy-gssapi.conf.sample /etc/httpd/conf.d/www-default.conf.sample
+RUN ln -s /data/www.conf /etc/httpd/conf.d/www.conf
+ENV container docker
+VOLUME [ "/tmp", "/run", "/data" ]
+ENTRYPOINT /usr/sbin/init-data
+
+RUN dnf install -y python-pip python-virtualenv mod_wsgi && dnf clean all
+RUN mkdir -p /var/www/django
+RUN cd /var/www/django \
+	&& virtualenv . \
+	&& source bin/activate \
+	&& pip install Django
+RUN cd /var/www/django \
+	&& source bin/activate \
+	&& django-admin startproject project \
+	&& cd project \
+	&& python manage.py migrate \
+	&& echo "from django.contrib.auth.models import Group; Group.objects.get_or_create(name='ext:admins');" | python manage.py shell \
+	&& sed -i '/NAME.*BASE_DIR.*sqlite/ { s#BASE_DIR#"/data/db"# }' project/settings.py
+COPY django/ /var/www/django/project/
+RUN sed -i \
+	-e "/django.contrib.auth.middleware.AuthenticationMiddleware/a'project.middleware.auth.PersistentRemoteUserMiddleware'," \
+	-e "/django.contrib.auth.middleware.SessionAuthenticationMiddleware/a'identity.external.RemoteUserAttrMiddleware'," \
+	-e "/MIDDLEWARE_CLASSES/iAUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend', 'django.contrib.auth.backends.ModelBackend', ]" \
+	-e "/django.contrib.staticfiles/a'activity'," \
+	-e 's/USE_L10N.*/USE_L10N = False/' \
+	-e "\$aLOGIN_REDIRECT_URL = '/'" \
+	-e "\$aDATETIME_FORMAT = 'N j, Y, H:i:s'" \
+	/var/www/django/project/project/settings.py
+RUN sed -i \
+	-e 's/from django.conf.urls import url/&, include/' \
+	-e "/admin.site.urls/aurl(r'^', include('activity.urls'))," \
+	/var/www/django/project/project/urls.py
+COPY init-django /usr/sbin/init-django
+RUN chmod a+x /usr/sbin/init-django
+COPY init-django.service /usr/lib/systemd/system/
+RUN ln -s /usr/lib/systemd/system/init-django.service /usr/lib/systemd/system/default.target.wants/
+COPY www-mod_wsgi-gssapi.conf /etc/httpd/conf.d/www-mod_wsgi-gssapi.conf.sample
+COPY www-mod_wsgi-saml.conf /etc/httpd/conf.d/www-mod_wsgi-saml.conf.sample
+RUN rm -f /etc/httpd/conf.d/www-default.conf.sample && ln -s www-mod_wsgi-gssapi.conf.sample /etc/httpd/conf.d/www-default.conf.sample

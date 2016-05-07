@@ -1,0 +1,39 @@
+{% load staticfiles %}
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/base.css" %}" />
+    <style>
+      #container {
+        min-width: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+    <div id="header">
+    <div id="branding">
+    <h1>
+      {% if user.is_anonymous %}
+      <a href="/">Not logged in</a>
+      {% else %}
+      <a href="/">Logged in as {{ user }}</a>
+      {% endif %}
+    </h1>
+    </div>
+    <div id="user-tools">
+      {% if user.is_anonymous %}
+      :: <a href="{% url 'login' %}">login</a>
+      {% else %}
+      :: <a href="{% url 'logout' %}">logout</a>
+      {% endif %}
+	:: <a href="/admin/">admin</a>
+    </div>
+    </div>
+    <div id="content">
+    {% block content %}
+    {% endblock %}
+    </div>
+    </div>
+  </body>
+</html>

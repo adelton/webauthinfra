@@ -1,0 +1,7 @@
+[Unit]
+Description=Configure Ipsilon client
+After=ipa-client-enroll.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ipsilon-client-configure

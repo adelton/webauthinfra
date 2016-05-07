@@ -1,0 +1,78 @@
+
+# Web application authentication developer setup
+#
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+version: '2'
+services:
+    ipa:
+        build:
+            context: ./src
+            dockerfile: Dockerfile.ipa
+        volumes:
+            - ./ipa-data:/data:Z
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        security_opt:
+            - seccomp:unconfined
+        hostname: ipa
+        domainname: example.test
+        stop_signal: RTMIN+3
+        # tty: true
+    www:
+        build:
+            context: ./src
+            dockerfile: Dockerfile.www
+            # By default, Dockerfile.www produces application backend in
+            # separate container. To run the example application under
+            # mod_wsgi directly in the www container, comment out the
+            # above dockerfile line and uncomment the following one.
+            #
+            # dockerfile: Dockerfile.www-with-app
+            #
+            # If you use Dockerfile.www-with-app, the link to app
+            # service and the whole app service definition below can
+            # be commented out as well.
+        volumes:
+            - ./www-data:/data:Z
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        security_opt:
+            - seccomp:unconfined
+        hostname: www
+        domainname: example.test
+        stop_signal: RTMIN+3
+        links:
+            - ipa:ipa.example.test
+            - app:app.example.test
+        # Uncomment the following if you want to be able to access the
+        # www container on host's interface as well.
+        # ports:
+        #    - "55080:80"
+        #    - "55443:443"
+    client:
+        build:
+            context: ./src
+            dockerfile: Dockerfile.client
+        volumes:
+            - ./client-data:/data:Z
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        security_opt:
+            - seccomp:unconfined
+        hostname: client
+        domainname: example.test
+        stop_signal: RTMIN+3
+        links:
+            - ipa:ipa.example.test
+            - www:www.example.test
+        ports:
+            - "55022:22"
+    app:
+        build:
+            context: ./src
+            # dockerfile: Dockerfile.django-dist
+            dockerfile: Dockerfile.django-pip
+        volumes:
+            - ./app-data:/data:Z
+        hostname: app
+        domainname: example.test

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# If the FreeIPA server does not contain ipa-server-install-options
+# and the server was not configured yet, produce some default
+# configuration for the developer setup.
+
+set -e
+
+cd /
+
+DATA=/data
+if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
+	echo "Configuring $HOSTNAME ..."
+	openssl rand -base64 32 > $DATA/admin-password
+	openssl rand -base64 32 > $DATA/ds-master-password
+	cat > $DATA/ipa-server-install-options <<EOS
+--admin-password='$( cat $DATA/admin-password )'
+--ds-password='$( cat $DATA/ds-master-password )'
+--forwarder=127.0.0.11
+--no-dnssec-validation
+--no-ntp
+EOS
+fi
+
+exec /usr/sbin/init-data --show-log

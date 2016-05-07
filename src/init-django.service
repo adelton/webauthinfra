@@ -1,0 +1,7 @@
+[Unit]
+Description=Populate Django database and admin user
+Before=httpd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/init-django

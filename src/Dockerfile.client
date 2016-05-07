@@ -1,0 +1,29 @@
+FROM fedora:23
+RUN dnf install -y /usr/sbin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs && dnf clean all
+COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr/sbin/
+RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/populate-data-volume /usr/sbin/setup-authorized-keys
+
+COPY http-klist-kinit-kpasswd http-server /usr/local/bin/
+RUN chmod a+x /usr/local/bin/http-klist-kinit-kpasswd /usr/local/bin/http-server
+
+COPY ipa-client-enroll.service populate-data-volume.service setup-authorized-keys.service http-server.service /usr/lib/systemd/system/
+RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/sshd.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/populate-data-volume.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/setup-authorized-keys.service /usr/lib/systemd/system/default.target.wants/
+RUN ln -s /usr/lib/systemd/system/http-server.service /usr/lib/systemd/system/default.target.wants/
+COPY volume-data-list /etc/
+
+COPY firefox/firefox.cfg  /usr/lib64/firefox/
+COPY firefox/*.js /usr/lib64/firefox/browser/defaults/preferences/
+
+RUN groupadd -g 456 developer \
+	&& useradd -u 456 -g developer developer \
+	&& mkdir /home/developer/.ssh \
+	&& touch /home/developer/.Xauthority \
+	&& echo 'export LIBGL_ALWAYS_INDIRECT=y' >> /home/developer/.bashrc \
+	&& chown -R developer:developer /home/developer
+
+ENV container docker
+VOLUME [ "/tmp", "/run", "/data" ]
+ENTRYPOINT /usr/sbin/init-data

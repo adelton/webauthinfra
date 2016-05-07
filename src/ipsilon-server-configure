@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Copyright 2016 Jan Pazdziora
+#
+# Licensed under the Apache License, Version 2.0 (the "License").
+
+# Set up Ipsilon server (SAML IdP). It can be used on FreeIPA host
+# (container) as well.
+
+set -e
+
+exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+
+if [ -f /etc/httpd/conf.d/ipsilon-idp.conf ] ; then
+	echo "Ipsilon IdP is already configured on $HOSTNAME."
+	exit
+fi
+
+set -x
+
+ipsilon-server-install --form yes --form-service idp --info-sssd yes
+rpm -q mod_nss && sed -i 's/\<SSL/NSS/' /etc/ipsilon/idp/idp.conf
+systemctl enable httpd
+systemctl restart httpd

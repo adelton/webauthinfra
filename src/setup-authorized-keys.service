@@ -1,0 +1,7 @@
+[Unit]
+Description=Generate SSH key for ssh access to the client container
+After=populate-data-volume.service sshd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/setup-authorized-keys
