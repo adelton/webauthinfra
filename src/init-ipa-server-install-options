@@ -26,4 +26,5 @@ if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
 EOS
 fi
 
-exec /usr/sbin/init-data --show-log
+export SHOW_LOG=1
+exec /usr/sbin/init-data
