@@ -33,8 +33,9 @@ RUN cd /var/www/django \
 COPY django/ /var/www/django/project/
 RUN sed -i \
 	-e "/django.contrib.auth.middleware.AuthenticationMiddleware/a'project.middleware.auth.PersistentRemoteUserMiddleware'," \
-	-e "/django.contrib.auth.middleware.SessionAuthenticationMiddleware/a'identity.external.RemoteUserAttrMiddleware'," \
+	-e "/django.contrib.messages.middleware.MessageMiddleware/i'identity.external.RemoteUserAttrMiddleware'," \
 	-e "/MIDDLEWARE_CLASSES/iAUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend', 'django.contrib.auth.backends.ModelBackend', ]" \
+	-e "/MIDDLEWARE /iAUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend', 'django.contrib.auth.backends.ModelBackend', ]" \
 	-e "/django.contrib.staticfiles/a'activity'," \
 	-e 's/USE_L10N.*/USE_L10N = False/' \
 	-e "\$aLOGIN_REDIRECT_URL = '/'" \
