@@ -14,8 +14,6 @@ services:
         volumes:
             - ./ipa-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        security_opt:
-            - seccomp:unconfined
         hostname: ipa
         domainname: example.test
         stop_signal: RTMIN+3
@@ -37,8 +35,6 @@ services:
         volumes:
             - ./www-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        security_opt:
-            - seccomp:unconfined
         hostname: www
         domainname: example.test
         stop_signal: RTMIN+3
@@ -57,8 +53,6 @@ services:
         volumes:
             - ./client-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        security_opt:
-            - seccomp:unconfined
         hostname: client
         domainname: example.test
         stop_signal: RTMIN+3
