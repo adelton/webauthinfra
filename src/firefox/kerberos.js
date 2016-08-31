@@ -1,1 +1,1 @@
-pref("network.negotiate-auth.trusted-uris", ".example.test");
+pref("network.negotiate-auth.trusted-uris", "https://");
