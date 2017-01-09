@@ -32,4 +32,8 @@ EOS
 fi
 
 export SHOW_LOG=1
-exec /usr/sbin/init-data
+if [ -f /usr/sbin/init-data ] ; then
+	exec /usr/sbin/init-data
+else
+	exec /usr/local/sbin/init
+fi
