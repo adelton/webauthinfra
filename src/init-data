@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016 Jan Pazdziora
+# Copyright 2016--2017 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -8,6 +8,11 @@
 # waits for the IPA server to be ready.
 
 set -e
+
+UNAME=$( uname -n )
+if [ "$HOSTNAME" != "$UNAME" -a "$HOSTNAME" == "${UNAME%%.*}" ] ; then
+	HOSTNAME="$UNAME"
+fi
 
 for i in /run/* /tmp/* ; do
 	if [ -e "$i" -a "$i" != '/run/secrets' ] ; then

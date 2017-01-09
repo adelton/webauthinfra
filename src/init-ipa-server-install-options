@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016 Jan Pazdziora
+# Copyright 2016--2017 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -11,6 +11,11 @@
 set -e
 
 cd /
+
+UNAME=$( uname -n )
+if [ "$HOSTNAME" != "$UNAME" -a "$HOSTNAME" == "${UNAME%%.*}" ] ; then
+	HOSTNAME="$UNAME"
+fi
 
 DATA=/data
 if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
