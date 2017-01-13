@@ -80,16 +80,16 @@ well a local Kerberos configuration, so starting with the provided
 Besides docker and docker-compose, there is one external dependency:
 docker image freeipa-server is assumed to be available.
 
-* You can build it from https://github.com/adelton/docker-freeipa
+* You can build it from https://github.com/freeipa/freeipa-container
   repository, with steps
 
-    git clone https://github.com/adelton/docker-freeipa.git
+    git clone https://github.com/freeipa/freeipa-container.git
     docker build -t freeipa-server docker-freeipa
 
 * Alternatively, you can download pre-built image from Docker registry:
 
-    docker pull adelton/freeipa-server
-    docker tag adelton/freeipa-server freeipa-server
+    docker pull freeipa/freeipa-server
+    docker tag freeipa/freeipa-server freeipa-server
 
 When started, the containers will store their configuration and data
 in *-data/ sub-directories, and their ownership will change to root
