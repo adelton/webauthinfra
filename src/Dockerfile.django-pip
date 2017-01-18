@@ -23,6 +23,7 @@ RUN sed -i \
 	-e 's/USE_L10N.*/USE_L10N = False/' \
 	-e "\$aLOGIN_REDIRECT_URL = '/'" \
 	-e "\$aDATETIME_FORMAT = 'N j, Y, H:i:s'" \
+	-e "s/^ALLOWED_HOSTS.*$/ALLOWED_HOSTS = ['*']/" \
 	/var/www/django/project/project/settings.py
 RUN sed -i \
 	-e 's/from django.conf.urls import url/&, include/' \
