@@ -10,10 +10,7 @@ set -e
 
 exec >> /var/log/ipa-server-run.log 2>&1
 
-ipa-getcert resubmit -d /etc/httpd/alias -n Server-Cert -D $( uname -n )
-while ! ipa-getcert list -d /etc/httpd/alias -n Server-Cert | grep -q 'status: MONITORING' ; do
-	sleep 5
-done
+ipa-getcert resubmit -w -d /etc/httpd/alias -n Server-Cert -D $( uname -n )
 
 if ! [ -f /data/allow_all_disabled ] ; then
 	kinit admin < /data/admin-password
