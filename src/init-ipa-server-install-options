@@ -36,6 +36,13 @@ if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
 EOS
 fi
 
+(
+	trap '' SIGHUP
+	mkdir -p /run/console
+	(sleep infinity) &
+	echo $! > /run/console/sleeping.pid
+)
+
 export SHOW_LOG=1
 if [ -f /usr/sbin/init-data ] ; then
 	exec /usr/sbin/init-data
