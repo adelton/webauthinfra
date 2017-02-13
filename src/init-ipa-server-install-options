@@ -36,6 +36,13 @@ if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
 EOS
 fi
 
+(
+	trap '' SIGHUP
+	mkdir -p /run/docker-console
+	(sleep infinity) &
+	ln -s /proc/$!/fd /run/docker-console/
+)
+
 export SHOW_LOG=1
 if [ -f /usr/sbin/init-data ] ; then
 	exec /usr/sbin/init-data
