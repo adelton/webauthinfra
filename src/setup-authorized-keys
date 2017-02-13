@@ -22,7 +22,6 @@ fi
 (
 set -x
 cp /data/id_rsa.pub /home/developer/.ssh/authorized_keys
-chmod +r /data/id_rsa
 )
 
 cat <<EOF
@@ -32,5 +31,8 @@ Usage:
   To kinit, in the browser started with ^^^ visit http://localhost/
   or execute
   cat ipa-data/admin-password | ssh -i client-data/id_rsa -p 55022 developer@localhost kinit admin
+
+  * Please make sure you have sufficient access rights to read client-data/id_rsa file
+    or just copy client-data/id_rsa to your working directory, and use it with changed owner
 
 EOF
