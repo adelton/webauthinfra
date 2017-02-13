@@ -10,7 +10,7 @@
 
 set -e
 
-exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+exec >> /run/docker-console/fd/1 2>> /run/docker-console/fd/2
 
 if [ -f /etc/ipa/default.conf ] ; then
 	echo "$HOSTNAME is already IPA-enrolled."

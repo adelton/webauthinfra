@@ -72,4 +72,11 @@ set -x
 update-ca-trust
 )
 
+(
+	trap '' SIGHUP
+	mkdir -p /run/docker-console
+	(sleep infinity) &
+	ln -s /proc/$!/fd /run/docker-console/
+)
+
 exec /usr/sbin/init

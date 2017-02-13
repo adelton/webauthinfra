@@ -8,7 +8,7 @@
 
 set -e
 
-exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+exec >> /run/docker-console/fd/1 2>> /run/docker-console/fd/2
 
 if [ -f /data/id_rsa ] ; then
 	echo "The ssh key was already generated on $HOSTNAME."

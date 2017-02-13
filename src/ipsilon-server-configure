@@ -9,7 +9,7 @@
 
 set -e
 
-exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+exec >> /run/docker-console/fd/1 2>> /run/docker-console/fd/2
 
 if [ -f /etc/httpd/conf.d/ipsilon-idp.conf ] ; then
 	echo "Ipsilon IdP is already configured on $HOSTNAME."
