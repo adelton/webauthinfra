@@ -10,7 +10,12 @@
 
 set -e
 
-exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+PID=$(cat /run/console/sleeping.pid)
+if [ -z $PID ]; then
+        exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+else
+        exec >> /proc/$PID/fd/1 2>> /proc/$PID/fd/2
+fi
 
 if [ -f /etc/httpd/saml2/$HOSTNAME/metadata.xml ] ; then
 	echo "Ipsilon client is already configured on $HOSTNAME."

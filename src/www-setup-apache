@@ -10,7 +10,12 @@
 
 set -e
 
-exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+PID=$(cat /run/console/sleeping.pid)
+if [ -z $PID ]; then
+        exec >> /proc/1/fd/1 2>> /proc/1/fd/2
+else
+        exec >> /proc/$PID/fd/1 2>> /proc/$PID/fd/2
+fi
 
 set -x
 echo "$(dig +short @127.0.0.11 app.example.test) app.example.test" >> /etc/hosts

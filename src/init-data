@@ -72,4 +72,11 @@ set -x
 update-ca-trust
 )
 
+(
+	trap '' SIGHUP
+	mkdir -p /run/console
+	(sleep infinity) &
+	echo $! > /run/console/sleeping.pid
+)
+
 exec /usr/sbin/init
