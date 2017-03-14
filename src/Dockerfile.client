@@ -1,4 +1,4 @@
-FROM fedora:24
+FROM fedora:25
 RUN dnf install -y /usr/sbin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs && dnf clean all
 COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr/sbin/
 RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/populate-data-volume /usr/sbin/setup-authorized-keys
