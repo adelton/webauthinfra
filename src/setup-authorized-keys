@@ -29,6 +29,7 @@ cat <<EOF
 
 Usage:
   ssh -X -i client-data/id_rsa -p 55022 developer@localhost firefox -no-remote
+  (when running ssh as root, chmod 600 client-data/id_rsa might be needed)
   To kinit, in the browser started with ^^^ visit http://localhost/
   or execute
   cat ipa-data/admin-password | ssh -i client-data/id_rsa -p 55022 developer@localhost kinit admin

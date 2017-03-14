@@ -139,6 +139,8 @@ in to the container where Firefox is configured, and run the browser:
 
   ssh -X -i client-data/id_rsa -p 55022 developer@localhost firefox -no-remote
 
+(When running ssh as root, chmod 600 client-data/id_rsa might be needed.)
+
 It will open four tabs -- the example application, IPA and IdP logon
 pages, and a page that allows you to obtain Kerberos Ticket Granting
 Ticket (kinit) or change IPA user passwords in the client container.
