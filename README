@@ -77,8 +77,8 @@ well a local Kerberos configuration, so starting with the provided
 -----------------
   Prerequisites
 
-Besides docker and docker-compose, there is one external dependency:
-docker image freeipa-server is assumed to be available.
+Besides docker and docker-compose, there is one external image
+dependency: docker image freeipa-server is assumed to be available.
 
 * You can build it from https://github.com/freeipa/freeipa-container
   repository, with steps
@@ -96,6 +96,12 @@ in *-data/ sub-directories, and their ownership will change to root
 and their SELinux labels will likely change as well. You might want
 to pick location for the local copy/clone of the repository where this
 will not cause problems.
+
+On SELinux enabled systems,
+
+    setsebool -P container_manage_cgroup 1
+
+might be needed to enable running systemd in the containers.
 
 ----------------------
   Building the setup
