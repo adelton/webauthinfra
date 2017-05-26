@@ -70,3 +70,4 @@ services:
             - ./app-data:/data:Z
         hostname: app
         domainname: example.test
+        stop_signal: KILL
