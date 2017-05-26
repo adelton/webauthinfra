@@ -38,6 +38,7 @@ fi
 
 (
 	trap '' SIGHUP
+	rm -rf /run/docker-console
 	mkdir -p /run/docker-console
 	(sleep infinity) &
 	ln -s /proc/$!/fd /run/docker-console/
