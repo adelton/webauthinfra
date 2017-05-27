@@ -59,4 +59,4 @@ Components.classes["@mozilla.org/toolkit/crash-reporter;1"].getService(Component
 
 pref("datareporting.policy.dataSubmissionEnabled", false);
 pref("datareporting.policy.dataSubmissionPolicyResponseType", "accepted-info-bar-dismissed");
-pref("datareporting.policy.dataSubmissionPolicyAccepted; false);
+pref("datareporting.policy.dataSubmissionPolicyAccepted", false);
