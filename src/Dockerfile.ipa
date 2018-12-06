@@ -2,6 +2,7 @@ FROM freeipa-server
 RUN sed -i 's/return CheckedIPAddress(value)/return CheckedIPAddress(value, allow_loopback=True)/' /usr/lib/python2.7/site-packages/ipapython/install/cli.py
 
 RUN ( cd /data-template && cp -rp . /data ) \
+	&& ( ! test -d /tmp-template || ( cd /tmp-template && cp -rp . /tmp ) ) \
 	&& dnf install -y /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd \
 	&& dnf clean all \
 	&& ( cd /data && cp -rp . /data-template )
