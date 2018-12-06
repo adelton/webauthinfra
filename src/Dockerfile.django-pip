@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:25
+FROM registry.fedoraproject.org/fedora:26
 RUN dnf install -y python-pip python-virtualenv && dnf clean all
 RUN mv /usr/lib/tmpfiles.d/journal-nocow.conf /usr/lib/tmpfiles.d/journal-nocow.conf.disabled
 RUN mkdir -p /var/www/django
