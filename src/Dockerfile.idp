@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:27
+FROM registry.fedoraproject.org/fedora:28
 RUN dnf install -y /usr/sbin/ipa-client-install /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd python-sssdconfig python-dbus openssl sqlite && dnf clean all
 COPY init-data ipa-client-enroll ipsilon-server-configure ipsilon-server-wait-for-sp populate-data-volume /usr/sbin/
 RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/ipsilon-server-configure /usr/sbin/populate-data-volume

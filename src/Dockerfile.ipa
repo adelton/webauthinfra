@@ -1,4 +1,4 @@
-FROM freeipa/freeipa-server:fedora-27
+FROM freeipa/freeipa-server:fedora-28
 COPY init-ipa-server-install-options ipa-precreate-hosts /usr/sbin/
 RUN chmod a+x /usr/sbin/init-ipa-server-install-options /usr/sbin/ipa-precreate-hosts
 COPY ipa-precreate-hosts.service /usr/lib/systemd/system/
