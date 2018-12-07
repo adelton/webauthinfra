@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016 Jan Pazdziora
+# Copyright 2016--2018 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -17,7 +17,7 @@ if [ -f /etc/httpd/saml2/$HOSTNAME/metadata.xml ] ; then
 	exit
 fi
 
-SERVER_METADATA=https://ipa.example.test/idp/saml2/metadata
+SERVER_METADATA=https://idp.example.test/idp/saml2/metadata
 
 i=0
 while ! curl -fs $SERVER_METADATA &> /dev/null ; do
@@ -31,7 +31,7 @@ done
 set -x
 
 curl -o /tmp/admin-password -fs http://ipa.example.test/pub/admin-password
-ipsilon-client-install --saml-idp-metadata $SERVER_METADATA --saml-auth /app/saml-login --saml-sp-name app --saml-idp-url https://ipa.example.test/idp/ --saml-sp-name app --admin-password /tmp/admin-password --no-saml-soap-logout
+ipsilon-client-install --saml-idp-metadata $SERVER_METADATA --saml-auth /app/saml-login --saml-sp-name app --saml-idp-url https://idp.example.test/idp/ --saml-sp-name app --admin-password /tmp/admin-password --no-saml-soap-logout
 mkdir -p /var/www/html/pub
 rm -f /var/www/html/pub/metadata.xml
 cp -f /etc/httpd/saml2/$HOSTNAME/metadata.xml /var/www/html/pub/metadata.xml

@@ -1,26 +1,11 @@
 FROM freeipa/freeipa-server:fedora-27
 RUN sed -i 's/return CheckedIPAddress(value)/return CheckedIPAddress(value, allow_loopback=True)/' /usr/lib/python3.6/site-packages/ipapython/install/cli.py
 
-RUN ( cd /data-template && cp -rp . /data ) \
-	&& ( ! test -d /tmp-template || ( cd /tmp-template && cp -rp . /tmp ) ) \
-	&& dnf install -y /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd python-sssdconfig \
-	&& dnf clean all \
-	&& ( cd /data && cp -rp . /data-template )
-RUN echo /etc/ipsilon/ >> /etc/volume-data-list \
-	&& mv /etc/ipsilon /data-template/etc/ipsilon \
-	&& ln -s /data/etc/ipsilon /etc/ipsilon \
-	&& echo /var/lib/ipsilon/ >> /etc/volume-data-list \
-	&& mv /var/lib/ipsilon /data-template/var/lib/ipsilon \
-	&& ln -s /data/var/lib/ipsilon /var/lib/ipsilon
-
-COPY init-ipa-server-install-options ipsilon-server-configure ipa-precreate-hosts /usr/sbin/
-RUN chmod a+x /usr/sbin/init-ipa-server-install-options /usr/sbin/ipsilon-server-configure /usr/sbin/ipa-precreate-hosts
-COPY ipsilon-server-configure.service ipa-precreate-hosts.service /usr/lib/systemd/system/
+COPY init-ipa-server-install-options ipa-precreate-hosts /usr/sbin/
+RUN chmod a+x /usr/sbin/init-ipa-server-install-options /usr/sbin/ipa-precreate-hosts
+COPY ipa-precreate-hosts.service /usr/lib/systemd/system/
 RUN mkdir /usr/lib/systemd/system/container-ipa.target.wants \
-	&& ln -s /usr/lib/systemd/system/ipsilon-server-configure.service /usr/lib/systemd/system/container-ipa.target.wants/ipsilon-server-configure.service \
 	&& ln -s /usr/lib/systemd/system/ipa-precreate-hosts.service /usr/lib/systemd/system/container-ipa.target.wants/ipa-precreate-hosts.service
 RUN ln -s /data /var/www/html/pub
-COPY app.pam-service /data-template/etc/pam.d/idp
 
-RUN mv /data-template/etc/httpd/conf.d/ssl.conf /data-template/etc/httpd/conf.d/ssl.conf.ipsilon-orig
 ENTRYPOINT [ "/usr/sbin/init-ipa-server-install-options" ]

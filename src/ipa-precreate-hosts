@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016--2017 Jan Pazdziora
+# Copyright 2016--2018 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -36,7 +36,7 @@ if ! [ -f /data/allow_all_disabled ] ; then
 	)
 fi
 
-HOSTS="www.example.test client.example.test"
+HOSTS="idp.example.test www.example.test client.example.test"
 for i in $HOSTS ; do
 	if ! [ -f /data/$i-otp ] ; then
 		echo "Creating host record for $i"

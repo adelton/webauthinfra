@@ -30,8 +30,8 @@ SAML are involved.
 This repository aims to help with that task, providing multi-container
 developer setup that can be used for development and testing of
 external authentication methods for Web applications. By default,
-the setup contains IPA server with Ipsilon SAML Identity Provider
-in container (service) "ipa", Firefox browser already configured
+the setup contains IPA server in container (service) "ipa", Ipsilon
+SAML Identity Provider ("idp"), Firefox browser already configured
 to use the server for Kerberos authentication ("client"), Apache
 HTTP server with modules for GSS-API (Kerberos) and SAML ("www"),
 as well as an example Django application that shows the effect of
@@ -46,11 +46,13 @@ application ("app").
         |          or      | "www"            |  content
         |       redirect   +------------------+
         |
-        \  Kerberos   +----------+
-          ----------> |   IPA    |
-           or SAML    | -------- |
-           redirects  | SAML IdP |
-                      | "ipa"    |
+        \  Kerberos   +---------+
+        | ----------> | FreeIPA |
+        |             | "ipa"   |
+        |             +---------+
+        \  or SAML    +----------+
+         -----------> | SAML IdP |
+          redirects   | "idp"    |
                       +----------+
 
 By changing the configuration of the Web server, it is possible to
@@ -98,7 +100,7 @@ With the freeipa-server image available, running
 
   docker-compose build
 
-in the directory of this repo will build create four container images.
+in the directory of this repo will build create five container images.
 Depending on the machine where you run the build, it might take
 minutes to dozens of minutes to build.
 
@@ -111,16 +113,20 @@ The setup can be started with
 
 It will provide long output starting with
 
-  Creating webauthinfra_ipa_1
-  Creating webauthinfra_app_1
-  Creating webauthinfra_www_1
-  Creating webauthinfra_client_1
-  Attaching to webauthinfra_ipa_1, webauthinfra_app_1, webauthinfra_www_1, webauthinfra_client_1
-  ipa_1    | Configuring ipa.example.test ...
-  ipa_1    | Mon May  9 13:59:30 UTC 2016 /usr/sbin/ipa-server-configure-first
-  ipa_1    |
-  ipa_1    | The log file for this installation can be found in /var/log/ipaserver-install.log
-  www_1    | Waiting for FreeIPA server (HTTP Server) ...
+  Creating webauthinfra_ipa_1 ... done
+  Creating webauthinfra_app_1 ... done
+  Creating webauthinfra_idp_1 ... done
+  Creating webauthinfra_www_1 ... done
+  Creating webauthinfra_client_1 ... done
+  Attaching to webauthinfra_app_1, webauthinfra_ipa_1, webauthinfra_idp_1, webauthinfra_www_1, webauthinfra_client_1
+  ipa_1     | Configuring ipa.example.test ...
+  ipa_1     | Mon Dec 10 18:42:42 UTC 2018 /usr/sbin/ipa-server-configure-first
+  ipa_1     |
+  ipa_1     | The log file for this installation can be found in /var/log/ipaserver-install.log
+  ipa_1     | ==============================================================================
+  ipa_1     | This program will set up the FreeIPA Server.
+  idp_1     | Waiting for FreeIPA server (HTTP Server) ...
+  www_1     | Waiting for FreeIPA server (HTTP Server) ...
 
 and you can watch IPA server and Ipsilon IdP being configured, and
 then the client container with Firefox IPA-enrolled and www container
@@ -187,7 +193,7 @@ and restart the Apache HTTP server:
 
 When you try to log in to the example application now, instead of
 Kerberos authentication used, you should see HTTP redirection to the
-IdP at ipa.example.test/idp where you will authenticate and be
+IdP at idp.example.test/idp where you will authenticate and be
 redirected back.
 
 To switch back, use src/www-proxy-gssapi.conf which was the default
@@ -239,7 +245,7 @@ application has different layout of the logon URLs, so the Apache
 HTTP server configuration in the "www" container will need to be
 tweaked a bit as well, either by changing the src/www*.conf files or
 by putting the configuration to www-data/www.conf directly.
-  
+
 This will turn the HTTP server container into authentication HTTP
 proxy for your application, instead of the default example one.
 
@@ -268,9 +274,13 @@ production setups applies here as well.
 
 The services:
 
-ipa	IPA server and Ipsilon IdP server
+ipa	IPA server
 	Hostname: ipa.example.test
 	Persistent storage in ipa-data/
+
+idp	Ipsilon IdP server
+	Hostname: idp.example.test
+	Persistent storage in idp-data/
 
 www	Apache HTTP server with authn/authz modules
 	Hostname: www.example.test
@@ -300,7 +310,7 @@ PAM services and host-based access access control (HBAC) rules:
 webapp		used for HBAC on http://www.example.test
 		HBAC rule: allow_webapp
 
-idp		used for HBAC ipa.example.test/idp
+idp		used for HBAC idp.example.test/idp
 		HBAC rule: allow_idp
 
 Both HBAC rules are set up to allow access for any user but the HBAC

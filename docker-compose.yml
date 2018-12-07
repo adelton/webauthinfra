@@ -1,7 +1,7 @@
 
 # Web application authentication developer setup
 #
-# Copyright 2016 Jan Pazdziora
+# Copyright 2016--2018 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -17,6 +17,19 @@ services:
         hostname: ipa
         domainname: example.test
         stop_signal: RTMIN+3
+        # tty: true
+    idp:
+        build:
+            context: ./src
+            dockerfile: Dockerfile.idp
+        volumes:
+            - ./idp-data:/data:Z
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        hostname: idp
+        domainname: example.test
+        stop_signal: RTMIN+3
+        links:
+            - ipa:ipa.example.test
         # tty: true
     www:
         build:
@@ -40,6 +53,7 @@ services:
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
+            - idp:idp.example.test
             - app:app.example.test
         # Uncomment the following if you want to be able to access the
         # www container on host's interface as well.
@@ -58,6 +72,7 @@ services:
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
+            - idp:idp.example.test
             - www:www.example.test
         ports:
             - "55022:22"
