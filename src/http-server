@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-# Copyright 2016 Jan Pazdziora
+# Copyright 2016--2018 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -8,18 +8,18 @@
 # user developer, to allow managing the credential cache and changing
 # passwords via Web form.
 
-import BaseHTTPServer, CGIHTTPServer
+import http.server
 from subprocess import Popen, PIPE
 import pwd
 
-class MyCGIHTTPRequestHandler(CGIHTTPServer.CGIHTTPRequestHandler):
+class MyCGIHTTPRequestHandler(http.server.CGIHTTPRequestHandler):
     def is_cgi(self):
         self.cgi_info = '/usr/local/bin/', 'http-klist-kinit-kpasswd'
         return True
 
-CGIHTTPServer.nobody = pwd.getpwnam('developer')[2]
+http.server.nobody = pwd.getpwnam('developer')[2]
 
-def run(server_class=BaseHTTPServer.HTTPServer,
+def run(server_class=http.server.HTTPServer,
         handler_class=MyCGIHTTPRequestHandler):
     server_address = ('', 80)
     httpd = server_class(server_address, handler_class)
