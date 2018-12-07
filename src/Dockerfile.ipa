@@ -3,7 +3,7 @@ RUN sed -i 's/return CheckedIPAddress(value)/return CheckedIPAddress(value, allo
 
 RUN ( cd /data-template && cp -rp . /data ) \
 	&& ( ! test -d /tmp-template || ( cd /tmp-template && cp -rp . /tmp ) ) \
-	&& dnf install -y /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd \
+	&& dnf install -y /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd python-sssdconfig \
 	&& dnf clean all \
 	&& ( cd /data && cp -rp . /data-template )
 RUN echo /etc/ipsilon/ >> /etc/volume-data-list \
