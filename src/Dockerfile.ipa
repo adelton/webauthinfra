@@ -1,4 +1,4 @@
-FROM freeipa-server
+FROM freeipa/freeipa-server:fedora-26
 RUN sed -i 's/return CheckedIPAddress(value)/return CheckedIPAddress(value, allow_loopback=True)/' /usr/lib/python2.7/site-packages/ipapython/install/cli.py
 
 RUN ( cd /data-template && cp -rp . /data ) \

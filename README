@@ -77,19 +77,7 @@ well a local Kerberos configuration, so starting with the provided
 -----------------
   Prerequisites
 
-Besides docker and docker-compose, there is one external image
-dependency: docker image freeipa-server is assumed to be available.
-
-* You can build it from https://github.com/freeipa/freeipa-container
-  repository, with steps
-
-    git clone https://github.com/freeipa/freeipa-container.git
-    docker build -t freeipa-server docker-freeipa
-
-* Alternatively, you can download pre-built image from Docker registry:
-
-    docker pull freeipa/freeipa-server
-    docker tag freeipa/freeipa-server freeipa-server
+The setup uses docker and docker-compose, so they should be available.
 
 When started, the containers will store their configuration and data
 in *-data/ sub-directories, and their ownership will change to root
@@ -325,7 +313,7 @@ goal.
 -----------
   Licence
 
-Copyright 2016--2017 Jan Pazdziora
+Copyright 2016--2018 Jan Pazdziora
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
