@@ -1,8 +1,8 @@
-FROM registry.fedoraproject.org/fedora:28
+FROM registry.fedoraproject.org/fedora:29
 RUN dnf install -y python3-virtualenv patch && dnf clean all
 RUN mkdir -p /var/www/django
 RUN cd /var/www/django \
-	&& virtualenv-3 . \
+	&& virtualenv . \
 	&& source bin/activate \
 	&& pip install 'Django == 2.0.*' django-identity-external
 RUN cd /var/www/django \

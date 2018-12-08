@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:28
+FROM registry.fedoraproject.org/fedora:29
 RUN dnf install -y /usr/sbin/ipa-client-install /usr/bin/ipsilon-client-install ipsilon-saml2 httpd mod_ssl mod_auth_gssapi mod_intercept_form_submit mod_lookup_identity sssd-dbus /usr/bin/xargs && dnf clean all
 COPY init-data ipa-client-enroll ipsilon-client-configure populate-data-volume www-setup-apache /usr/sbin/
 COPY ipa-client-enroll.service ipsilon-client-configure.service populate-data-volume.service www-setup-apache.service /usr/lib/systemd/system/
@@ -19,7 +19,7 @@ ENTRYPOINT /usr/sbin/init-data
 RUN dnf install -y python3-virtualenv python3-mod_wsgi patch && dnf clean all
 RUN mkdir -p /var/www/django
 RUN cd /var/www/django \
-	&& virtualenv-3 . \
+	&& virtualenv . \
 	&& source bin/activate \
 	&& pip install 'Django == 2.0.*' django-identity-external
 RUN cd /var/www/django \
