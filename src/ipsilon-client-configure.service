@@ -5,3 +5,4 @@ After=ipa-client-enroll.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/ipsilon-client-configure
+RemainAfterExit=true

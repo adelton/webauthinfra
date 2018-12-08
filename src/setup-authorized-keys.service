@@ -5,3 +5,4 @@ After=populate-data-volume.service sshd.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/setup-authorized-keys
+RemainAfterExit=true

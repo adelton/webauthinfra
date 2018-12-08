@@ -5,3 +5,4 @@ Before=httpd.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/init-django
+RemainAfterExit=true

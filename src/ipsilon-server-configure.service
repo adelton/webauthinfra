@@ -9,3 +9,4 @@ Before=ipa-precreate-hosts.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/ipsilon-server-configure
+RemainAfterExit=true

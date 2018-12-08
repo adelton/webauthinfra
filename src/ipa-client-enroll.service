@@ -4,3 +4,4 @@ Description=IPA-enroll the machine to the FreeIPA server
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/ipa-client-enroll
+RemainAfterExit=true

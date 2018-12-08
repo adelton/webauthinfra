@@ -5,3 +5,4 @@ After=ipa-client-enroll.service ipsilon-server-configure.service ipsilon-client-
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/populate-data-volume
+RemainAfterExit=true

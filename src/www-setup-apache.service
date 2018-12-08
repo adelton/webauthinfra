@@ -6,3 +6,4 @@ Before=populate-data-volume.service
 [Service]
 Type=oneshot
 ExecStart=/usr/sbin/www-setup-apache
+RemainAfterExit=true

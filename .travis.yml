@@ -1,0 +1,13 @@
+language: generic
+sudo: required
+
+services:
+- docker
+
+install: true
+
+before_script:
+- docker-compose build
+
+script:
+- tests/run-docker-compose-up.sh
