@@ -5,6 +5,7 @@ RUN patch -p1 < /root/issue-7650.patch
 RUN pip3 install -U selenium
 RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
 RUN tar xvzf geckodriver-v0.23.0-linux64.tar.gz && mv geckodriver /usr/local/bin/
+RUN systemctl unmask systemd-logind.service
 COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr/sbin/
 RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/populate-data-volume /usr/sbin/setup-authorized-keys
 
