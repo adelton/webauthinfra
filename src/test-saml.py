@@ -1,4 +1,4 @@
-#!/usr/bin.python3
+#!/usr/bin/python3
 
 from sys import argv
 from xvfbwrapper import Xvfb
