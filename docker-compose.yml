@@ -5,12 +5,14 @@
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
-version: '2'
+version: '2.1'
 services:
     ipa:
         build:
             context: ./src
             dockerfile: Dockerfile.ipa
+        sysctls:
+            - net.ipv6.conf.all.disable_ipv6=0
         volumes:
             - ./ipa-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
