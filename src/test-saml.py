@@ -17,7 +17,7 @@ with Xvfb() as xvfb:
 	print(title.text)
 	assert "Not logged in" in title.text
 
-	logon_link = driver.find_element_by_link_text("login")
+	logon_link = driver.find_element_by_xpath("//a[@href][text() = 'login']")
 	logon_link.click()
 	print(driver.current_url)
 
