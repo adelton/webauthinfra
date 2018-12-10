@@ -26,7 +26,6 @@ if ! [ -f /data/allow_all_disabled ] ; then
 	ipa hbacrule-find allow_idp || (
 		ipa hbacrule-add allow_idp --usercat=all --desc='Allow access to idp service.'
 		ipa hbacrule-add-service allow_idp --hbacsvcs=idp
-		ipa hbacrule-add-host allow_idp --hosts=$HOSTNAME
 		ipa hbacrule-disable allow_all
 	)
 
@@ -50,5 +49,7 @@ for i in $HOSTS ; do
 		)
 	fi
 done
+
+ipa hbacrule-add-host allow_idp --hosts=idp.example.test || :
 
 kdestroy -A
