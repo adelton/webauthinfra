@@ -10,4 +10,5 @@ before_script:
 - docker-compose build
 
 script:
-- tests/run-docker-compose-up.sh
+- make run
+- make test

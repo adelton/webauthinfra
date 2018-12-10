@@ -193,6 +193,8 @@ redirected back.
 To switch back, use src/www-proxy-gssapi.conf which was the default
 /data/www.conf configuration in the www container.
 
+The tests/test.sh can be used for testing the basic operation.
+
 -----------------------------
   Developing with the setup
 
@@ -309,6 +311,15 @@ Set of applications and authentication modules was used to demonstrate
 the external authentication concepts. In future versions, different
 versions or different applications might be used to achieve the same
 goal.
+
+---------------------
+  Automated testing
+
+The "client" container has Selenium with Python bindings installed,
+so it can be directly used for automated testing of the setup or
+developed application. Examples of simple tests can be found in
+src/test-kerberos.py and src/test-saml.py -- the are invoked from
+tests/test.sh.
 
 -----------
   Licence

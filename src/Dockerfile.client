@@ -1,5 +1,8 @@
 FROM registry.fedoraproject.org/fedora:26
-RUN dnf install -y /usr/sbin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs && dnf clean all
+RUN dnf install -y /usr/sbin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs python3-xvfbwrapper xorg-x11-server-Xvfb && dnf clean all
+RUN pip3 install -U selenium
+RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+RUN tar xvzf geckodriver-v0.23.0-linux64.tar.gz && mv geckodriver /usr/local/bin/
 COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr/sbin/
 RUN chmod a+x /usr/sbin/init-data /usr/sbin/ipa-client-enroll /usr/sbin/populate-data-volume /usr/sbin/setup-authorized-keys
 
@@ -18,6 +21,8 @@ COPY firefox/firefox.cfg  /usr/lib64/firefox/
 COPY firefox/cfg.js /usr/lib64/firefox/browser/defaults/preferences/
 # Workaround 1447696
 RUN mv /usr/lib64/firefox/distribution/distribution.ini /usr/lib64/firefox/distribution/distribution.ini.dist
+
+COPY test-kerberos.py test-saml.py /usr/local/bin/
 
 RUN groupadd -g 456 developer \
 	&& useradd -u 456 -g developer developer \
