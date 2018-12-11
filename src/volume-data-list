@@ -5,6 +5,7 @@
 /var/lib/systemd/catalog/
 /var/lib/systemd/random-seed
 /var/lib/ipsilon/
+/etc/authselect/
 /etc/nsswitch.conf
 /etc/sysconfig/authconfig
 /etc/systemd/system/multi-user.target.wants/
