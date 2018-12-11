@@ -18,15 +18,17 @@ with Xvfb() as xvfb:
 	assert "Not logged in" in title.text
 
 	logon_link = driver.find_element_by_xpath("//a[@href][text() = 'login']")
+	current_url = driver.current_url
 	logon_link.click()
+	WebDriverWait(driver, 15).until(expected_conditions.url_changes(current_url))
 	print(driver.current_url)
 
 	logon_form = driver.find_element_by_xpath("//form[input[@name = 'ipsilon_transaction_id']]")
 	logon_form.find_element_by_id("login_name").send_keys("admin")
 	logon_form.find_element_by_id("login_password").send_keys(argv[1])
+	current_url = driver.current_url
 	logon_form.submit()
-
-	WebDriverWait(driver, 15).until(expected_conditions.url_changes(driver.current_url))
+	WebDriverWait(driver, 15).until(expected_conditions.url_changes(current_url))
 	print(driver.current_url)
 
 	title = driver.find_element_by_xpath("//h1/a")

@@ -24,9 +24,8 @@ with Xvfb() as xvfb:
 	kinit_form.find_element_by_id("username").send_keys("admin")
 	kinit_form.find_element_by_id("password").send_keys(argv[1])
 	print("Submitting kinit")
-	kinit_form.submit()
-
 	html = driver.find_element_by_xpath("/html")
+	kinit_form.submit()
 	WebDriverWait(driver, 15).until(expected_conditions.staleness_of(html))
 
 	pre = driver.find_element_by_xpath("//pre")
@@ -40,7 +39,10 @@ with Xvfb() as xvfb:
 	assert "Not logged in" in title.text
 
 	logon_link = driver.find_element_by_xpath("//a[@href][text() = 'login']")
+	html = driver.find_element_by_xpath("/html")
 	logon_link.click()
+	WebDriverWait(driver, 15).until(expected_conditions.staleness_of(html))
+	print(driver.current_url)
 
 	title = driver.find_element_by_xpath("//h1/a")
 	print(title.text)
@@ -53,9 +55,8 @@ with Xvfb() as xvfb:
 	driver.get("http://localhost")
 	assert "Kerberos setup" in driver.title
 	print("Submitting kdestroy")
-	driver.find_element_by_name("kdestroy").submit()
-
 	html = driver.find_element_by_xpath("/html")
+	driver.find_element_by_name("kdestroy").submit()
 	WebDriverWait(driver, 15).until(expected_conditions.staleness_of(html))
 
 	pre = driver.find_element_by_xpath("//pre")
