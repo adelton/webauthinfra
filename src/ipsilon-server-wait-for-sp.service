@@ -1,0 +1,8 @@
+[Unit]
+Description=Wait for SP
+After=ipsilon-server-configure.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ipsilon-server-wait-for-sp
+RemainAfterExit=true
