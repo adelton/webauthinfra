@@ -12,3 +12,6 @@ before_script:
 script:
 - make run
 - make test
+- docker-compose down
+- make run
+- make test
