@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016--2017 Jan Pazdziora
+# Copyright 2016--2018 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -46,7 +46,7 @@ if id apache &> /dev/null ; then
 	ipa-getkeytab -k /etc/http.keytab -s $IPA -p HTTP/$HOSTNAME
 	chown apache /etc/http.keytab
 
-	ipa-getcert request -k /etc/pki/tls/private/localhost.key -f $HTTP_CERT -N $HOSTNAME -K HTTP/$HOSTNAME -w -D $HOSTNAME
+	ipa-getcert request -k /etc/pki/tls/private/localhost.key -f $HTTP_CERT -N $HOSTNAME -K HTTP/$HOSTNAME -w
 	chown apache $HTTP_CERT
 	)
 fi
