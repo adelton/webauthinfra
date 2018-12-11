@@ -1,0 +1,51 @@
+--- docker-compose.yml	2018-12-11 09:09:16.638080854 +0100
++++ docker-compose.yml.www-with-app	2018-12-11 10:36:01.788270676 +0100
+@@ -33,20 +33,10 @@
+         links:
+             - ipa:ipa.example.test
+         # tty: true
+-    www:
++    wwwapp:
+         build:
+             context: ./src
+-            dockerfile: Dockerfile.www
+-            # By default, Dockerfile.www produces application backend in
+-            # separate container. To run the example application under
+-            # mod_wsgi directly in the www container, comment out the
+-            # above dockerfile line and uncomment the following one.
+-            #
+-            # dockerfile: Dockerfile.www-with-app
+-            #
+-            # If you use Dockerfile.www-with-app, the link to app
+-            # service and the whole app service definition below can
+-            # be commented out as well.
++            dockerfile: Dockerfile.www-with-app
+         volumes:
+             - ./www-data:/data:Z
+             - /sys/fs/cgroup:/sys/fs/cgroup:ro
+@@ -56,7 +46,6 @@
+         links:
+             - ipa:ipa.example.test
+             - idp:idp.example.test
+-            - app:app.example.test
+         # Uncomment the following if you want to be able to access the
+         # www container on host's interface as well.
+         # ports:
+@@ -75,16 +64,6 @@
+         links:
+             - ipa:ipa.example.test
+             - idp:idp.example.test
+-            - www:www.example.test
++            - wwwapp:www.example.test
+         ports:
+             - "55022:22"
+-    app:
+-        build:
+-            context: ./src
+-            # dockerfile: Dockerfile.django-dist
+-            dockerfile: Dockerfile.django-pip
+-        volumes:
+-            - ./app-data:/data:Z
+-        hostname: app
+-        domainname: example.test
+-        stop_signal: KILL

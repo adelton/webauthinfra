@@ -2,7 +2,11 @@
 
 set -e
 
-docker-compose up &
+if test -n "$COMPOSE" ; then
+	docker-compose --file $COMPOSE up &
+else
+	docker-compose up &
+fi
 
 while ! docker ps | grep webauthinfra_www ; do
 	sleep 5

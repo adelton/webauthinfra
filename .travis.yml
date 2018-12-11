@@ -7,11 +7,14 @@ services:
 install: true
 
 before_script:
-- docker-compose build
+- make build
+- make build COMPOSE=docker-compose.yml.www-with-app
 
 script:
 - make run
 - make test
 - docker-compose down
 - make run
+- docker-compose down
+- make run COMPOSE=docker-compose.yml.www-with-app
 - make test
