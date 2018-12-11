@@ -22,6 +22,3 @@ ipsilon-server-install --form yes --form-service idp --info-sssd yes
 rpm -q mod_nss && sed -i 's/\<SSL/NSS/' /etc/ipsilon/idp/idp.conf
 systemctl enable httpd
 systemctl restart httpd
-
-sed -i '/\[domain/aselinux_provider = none' /etc/sssd/sssd.conf
-systemctl restart sssd
