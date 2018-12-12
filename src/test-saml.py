@@ -10,7 +10,7 @@ print("Admin password " + argv[1])
 
 with Xvfb() as xvfb:
 
-	driver = webdriver.Firefox(service_log_path = "/tmp/geckodriver.log")
+	driver = webdriver.Firefox(log_path = "/tmp/geckodriver.log")
 
 	driver.get("https://www.example.test/")
 	title = driver.find_element_by_xpath("//h1/a")

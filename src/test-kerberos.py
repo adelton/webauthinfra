@@ -11,7 +11,7 @@ print("Admin password " + argv[1])
 
 with Xvfb() as xvfb:
 
-	driver = webdriver.Firefox(service_log_path = "/tmp/geckodriver.log")
+	driver = webdriver.Firefox(log_path = "/tmp/geckodriver.log")
 
 	driver.get("http://localhost")
 	print(driver.title)
