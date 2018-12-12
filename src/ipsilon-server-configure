@@ -19,6 +19,10 @@ fi
 set -x
 
 ipsilon-server-install --form yes --form-service idp --info-sssd yes
+if ! grep -q 'allowed_uids.*apache' /etc/sssd/sssd.conf ; then
+	sed -i 's/^allowed_uids.*/&, apache/' /etc/sssd/sssd.conf
+fi
+systemctl restart sssd
 rpm -q mod_nss && sed -i 's/\<SSL/NSS/' /etc/ipsilon/idp/idp.conf
 systemctl enable httpd
 systemctl restart httpd
