@@ -15,6 +15,7 @@ script:
 - make test
 - docker-compose down
 - make run
+- make test
 - docker-compose down
 - make run COMPOSE=docker-compose.yml.www-with-app
 - make test
