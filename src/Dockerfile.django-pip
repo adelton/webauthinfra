@@ -1,5 +1,5 @@
 FROM registry.fedoraproject.org/fedora:28
-RUN dnf install -y python-pip python-virtualenv && dnf clean all
+RUN dnf install -y python-pip python-virtualenv patch && dnf clean all
 RUN mkdir -p /var/www/django
 RUN cd /var/www/django \
 	&& virtualenv . \
@@ -10,24 +10,9 @@ RUN cd /var/www/django \
 	&& django-admin startproject project \
 	&& cd project \
 	&& python manage.py migrate \
-	&& echo "from django.contrib.auth.models import Group; Group.objects.get_or_create(name='ext:admins');" | python manage.py shell \
-	&& sed -i '/NAME.*BASE_DIR.*sqlite/ { s#BASE_DIR#"/data/db"# }' project/settings.py
+	&& echo "from django.contrib.auth.models import Group; Group.objects.get_or_create(name='ext:admins');" | python manage.py shell
 COPY django/ /var/www/django/project/
-RUN sed -i \
-	-e "/django.contrib.auth.middleware.AuthenticationMiddleware/a'project.middleware.auth.PersistentRemoteUserMiddleware'," \
-	-e "/django.contrib.messages.middleware.MessageMiddleware/i'identity.external.RemoteUserAttrMiddleware'," \
-	-e "/MIDDLEWARE_CLASSES/iAUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend', 'django.contrib.auth.backends.ModelBackend', ]" \
-	-e "/MIDDLEWARE /iAUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend', 'django.contrib.auth.backends.ModelBackend', ]" \
-	-e "/django.contrib.staticfiles/a'activity'," \
-	-e 's/USE_L10N.*/USE_L10N = False/' \
-	-e "\$aLOGIN_REDIRECT_URL = '/'" \
-	-e "\$aDATETIME_FORMAT = 'N j, Y, H:i:s'" \
-	-e "s/^ALLOWED_HOSTS.*$/ALLOWED_HOSTS = ['*']/" \
-	/var/www/django/project/project/settings.py
-RUN sed -i \
-	-e 's/from django.conf.urls import url/&, include/' \
-	-e "/admin.site.urls/aurl(r'^', include('activity.urls'))," \
-	/var/www/django/project/project/urls.py
+RUN cd /var/www/django/project/ && patch -p0 < project.patch
 COPY init-django /usr/sbin/init-django
 RUN chmod a+x /usr/sbin/init-django
 ENTRYPOINT /usr/sbin/init-django
