@@ -28,7 +28,7 @@ with Xvfb() as xvfb:
 	logon_form.find_element_by_id("login_password").send_keys(argv[1])
 	current_url = driver.current_url
 	logon_form.submit()
-	WebDriverWait(driver, 15).until(expected_conditions.url_changes(current_url))
+	WebDriverWait(driver, 15).until(expected_conditions.url_to_be("https://www.example.test/"))
 	print(driver.current_url)
 
 	title = driver.find_element_by_xpath("//h1/a")
