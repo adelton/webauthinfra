@@ -14,5 +14,4 @@ RUN cd /var/www/django \
 COPY django/ /var/www/django/project/
 RUN cd /var/www/django/project/ && patch -p0 < project.patch
 COPY init-django /usr/sbin/init-django
-RUN chmod a+x /usr/sbin/init-django
 ENTRYPOINT /usr/sbin/init-django
