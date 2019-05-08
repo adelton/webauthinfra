@@ -21,7 +21,7 @@ RUN mkdir -p /var/www/django
 RUN cd /var/www/django \
 	&& virtualenv . \
 	&& source bin/activate \
-	&& pip install Django
+	&& pip install 'Django < 2.0' 'django-identity-external < 0.6'
 RUN cd /var/www/django \
 	&& source bin/activate \
 	&& django-admin startproject project \
