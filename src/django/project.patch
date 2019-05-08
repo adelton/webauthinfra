@@ -55,17 +55,16 @@
  STATIC_URL = '/static/'
 +LOGIN_REDIRECT_URL = '/'
 +DATETIME_FORMAT = 'N j, Y, H:i:s'
---- project/urls.py	2018-12-17 19:14:39.393554052 +0000
-+++ project/urls.py	2018-12-17 22:20:42.369462173 +0000
-@@ -13,9 +13,10 @@
-     1. Import the include() function: from django.conf.urls import url, include
-     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+--- project/urls.py	2019-05-08 19:11:38.000000000 +0000
++++ project/urls.py	2019-05-08 19:15:45.111541016 +0000
+@@ -14,8 +14,9 @@
+     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
  """
--from django.conf.urls import url
-+from django.conf.urls import url, include
  from django.contrib import admin
+-from django.urls import path
++from django.urls import path, include
  
  urlpatterns = [
-     url(r'^admin/', admin.site.urls),
-+    url(r'^', include('activity.urls')),
+     path('admin/', admin.site.urls),
++    path('', include('activity.urls')),
  ]
