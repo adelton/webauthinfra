@@ -1,10 +1,10 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
-from django.contrib.auth.views import logout
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^login/$', views.login, name='login'),
-    url(r'^logout/$', logout, name='logout', kwargs={'next_page': '/'}),
+    path('', views.index, name='index'),
+    path('login', views.login, name='login'),
+    path('logout', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 ]
