@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright 2016--2018 Jan Pazdziora
+# Copyright 2016--2019 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -13,6 +13,7 @@ print("Pragma: no-cache")
 print()
 
 import cgi
+from html import escape
 from subprocess import Popen, PIPE
 
 import cgitb
@@ -97,7 +98,7 @@ print("""
 
 proc = Popen([ 'klist' ], stdout=PIPE, stderr=PIPE, encoding="utf8")
 klist_stdout, klist_stderr = proc.communicate()
-print("<pre>%s</pre>" % (cgi.escape(klist_stdout + klist_stderr)))
+print("<pre>%s</pre>" % (escape(klist_stdout + klist_stderr)))
 
 print("""
 <form method="get" action="/"><input type="submit" value="Refresh klist"/></form>
@@ -116,7 +117,7 @@ if kinit_output:
         result = "error"
     if kinit_status == None:
         pre = 'p'
-    print("<%s class='%s'>%s</%s>" % (pre, result, cgi.escape(kinit_output), pre))
+    print("<%s class='%s'>%s</%s>" % (pre, result, escape(kinit_output), pre))
     if kinit_status > 0:
         print("<p class='error'>kinit failed with exit status %s.</p>" % kinit_status)
 
@@ -135,7 +136,7 @@ print("""
 <input type="submit" name="kinit" value="Run kinit"/>
 </p>
 </form>
-""" % cgi.escape(username or ''))
+""" % escape(username or ''))
 
 print("<hr/>")
 
@@ -148,7 +149,7 @@ if kdestroy_status != None:
     if kdestroy_status > 0:
         result = "error"
     if kdestroy_output:
-        print("<pre class='%s'>%s</pre>" % (result, cgi.escape(kdestroy_output)))
+        print("<pre class='%s'>%s</pre>" % (result, escape(kdestroy_output)))
     elif kdestroy_status:
         print("<p class='%s'>kdestroy failed with exit status %s.</p>" % (result, kdestroy_status))
     else:
@@ -176,7 +177,7 @@ if kpasswd_output:
         result = "error"
     if kpasswd_status == None:
         pre = 'p'
-    print("<%s class='%s'>%s</%s>" % (pre, result, cgi.escape(kpasswd_output), pre))
+    print("<%s class='%s'>%s</%s>" % (pre, result, escape(kpasswd_output), pre))
     if kpasswd_status > 0:
         print("<p>kpasswd failed with exit status %s.</p>" % kpasswd_status)
 
@@ -199,7 +200,7 @@ print("""
 <input type="submit" name="kpasswd" value="Run kpasswd"/>
 </p>
 </form>
-""" % cgi.escape(username or ''))
+""" % escape(username or ''))
 
 print("""
 </body>
