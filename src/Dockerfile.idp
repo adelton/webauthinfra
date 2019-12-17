@@ -1,5 +1,5 @@
 FROM registry.fedoraproject.org/fedora:31
-RUN dnf install -y /usr/sbin/ipa-client-install /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-infosssd sqlite && dnf clean all
+RUN dnf install -y /usr/sbin/ipa-client-install /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-openidc ipsilon-infosssd sqlite && dnf clean all
 COPY init-data ipa-client-enroll ipsilon-server-configure ipsilon-server-wait-for-sp populate-data-volume /usr/sbin/
 COPY ipa-client-enroll.service ipsilon-server-configure.service ipsilon-server-wait-for-sp.service populate-data-volume.service /usr/lib/systemd/system/
 RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/

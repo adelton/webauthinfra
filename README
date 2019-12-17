@@ -6,7 +6,7 @@
 Web applications that get deployed in large organizations typically
 need to be able to work with user identities provided by external
 identity sources like FreeIPA/IdM (IPA), Active Directory domains,
-or SAML Identity Providers.
+SAML Identity Providers (IdP), or OpenID Providers (OP).
 
 To support additional identity provider in Web application, using
 front-end HTTP server for authentication and top-level authorization
@@ -25,18 +25,18 @@ approach can be found at
 Even if consuming external authentication results might seem
 straightforward, it is still useful to verify the interaction,
 especially when HTTP status 401 for Kerberos or 30x redirects for
-SAML are involved.
+SAML or OpenID Connect are involved.
 
 This repository aims to help with that task, providing multi-container
 developer setup that can be used for development and testing of
 external authentication methods for Web applications. By default,
 the setup contains IPA server in container (service) "ipa", Ipsilon
-SAML Identity Provider ("idp"), Firefox browser already configured
-to use the server for Kerberos authentication ("client"), Apache
-HTTP server with modules for GSS-API (Kerberos) and SAML ("www"),
-as well as an example Django application that shows the effect of
-propagating authentication result and the user information to an
-application ("app").
+SAML Identity Provider and OpenID Provider ("idp"), Firefox browser
+already configured to use the server for Kerberos authentication
+("client"), Apache HTTP server with modules for GSS-API (Kerberos)
+and SAML and OpenID Connect ("www"), as well as an example Django
+application that shows the effect of propagating authentication result
+and the user information to an application ("app").
 
                                                  HTTP with auth
   +----------+     HTTP    +------------------+  result      +-------------+
@@ -49,17 +49,18 @@ application ("app").
         \  Kerberos   +---------+
         | ----------> | FreeIPA |
         |             | "ipa"   |
-        |             +---------+
-        \  or SAML    +----------+
-         -----------> | SAML IdP |
-          redirects   | "idp"    |
-                      +----------+
+        |  or SAML    +---------+
+        |  or OpenID  +-----------------+
+        \    Connect  | SAML IdP or     |
+         -----------> | OpenID Provider |
+          redirects   | "idp"           |
+                      +-----------------+
 
 By changing the configuration of the Web server, it is possible to
-switch from Kerberos to SAML and see the effects in action. It is
-also possible to rebuild the setup to run the application directly
-in the Web server container -- the example application would then
-be deployed there via mod_wsgi.
+switch from Kerberos to SAML or OpenID Connect and see the effects
+in action. It is also possible to rebuild the setup to run the
+application directly in the Web server container -- the example
+application would then be deployed there via mod_wsgi.
 
 This default setup can serve as demonstration of the concepts all by
 itself but its primary goal is to help developers get infrastructure
@@ -70,7 +71,7 @@ configure the Web server to proxy the requests to completely different
 backend location where the application resides.
 
 Instead of using the provided "client" container for browser testing,
-it is possible to access the IPA, IdP, and the authentication HTTP
+it is possible to access the IPA, IdP/OP, and the authentication HTTP
 server from a Web client (browser) outside of the setup. However, DNS
 or manual hosts records will likely need to be set up manually, as
 well a local Kerberos configuration, so starting with the provided
@@ -128,11 +129,11 @@ It will provide long output starting with
   idp_1     | Waiting for FreeIPA server (HTTP Server) ...
   www_1     | Waiting for FreeIPA server (HTTP Server) ...
 
-and you can watch IPA server and Ipsilon IdP being configured, and
+and you can watch IPA server and Ipsilon IdP/OP being configured, and
 then the client container with Firefox IPA-enrolled and www container
 with the Apache HTTP server IPA-enrolled and configured as SAML Service
-Provider, as well as the example Django application configured and
-started.
+Provider and OpenID Provider, as well as the example Django application
+configured and started.
 
 After all the containers have initialized, you can use ssh -X to log
 in to the container where Firefox is configured, and run the browser:
@@ -141,7 +142,7 @@ in to the container where Firefox is configured, and run the browser:
 
 (When running ssh as root, chmod 600 client-data/id_rsa might be needed.)
 
-It will open four tabs -- the example application, IPA and IdP logon
+It will open four tabs -- the example application, IPA and IdP/OP logon
 pages, and a page that allows you to obtain Kerberos Ticket Granting
 Ticket (kinit) or change IPA user passwords in the client container.
 There will be one admin user in the IPA server -- the password for
@@ -196,8 +197,10 @@ Kerberos authentication used, you should see HTTP redirection to the
 IdP at idp.example.test/idp where you will authenticate and be
 redirected back.
 
-To switch back, use src/www-proxy-gssapi.conf which was the default
-/data/www.conf configuration in the www container.
+For OpenID Connect, use src/www-proxy-openidc.conf in similar manner.
+
+To switch back to Kerberos, use src/www-proxy-gssapi.conf which was
+the default /data/www.conf configuration in the www container.
 
 The tests/test.sh can be used for testing the basic operation.
 

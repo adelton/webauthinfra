@@ -1,5 +1,5 @@
 FROM registry.fedoraproject.org/fedora:31
-RUN dnf install -y /usr/sbin/ipa-client-install /usr/bin/ipsilon-client-install ipsilon-saml2 httpd mod_ssl mod_auth_gssapi mod_intercept_form_submit mod_lookup_identity sssd-dbus /usr/bin/xargs && dnf clean all
+RUN dnf install -y /usr/sbin/ipa-client-install /usr/bin/ipsilon-client-install ipsilon-saml2 httpd mod_ssl mod_auth_gssapi mod_auth_openidc mod_intercept_form_submit mod_lookup_identity sssd-dbus /usr/bin/xargs && dnf clean all
 COPY init-data ipa-client-enroll ipsilon-client-configure populate-data-volume www-setup-apache /usr/sbin/
 COPY ipa-client-enroll.service ipsilon-client-configure.service populate-data-volume.service www-setup-apache.service /usr/lib/systemd/system/
 RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/

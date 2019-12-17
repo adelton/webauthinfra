@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016--2018 Jan Pazdziora
+# Copyright 2016--2019 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -31,8 +31,13 @@ done
 set -x
 
 curl -o /tmp/admin-password -fs http://ipa.example.test/pub/admin-password
-ipsilon-client-install --saml-idp-metadata $SERVER_METADATA --saml-auth /app/saml-login --saml-sp-name app --saml-idp-url https://idp.example.test/idp/ --saml-sp-name app --admin-password /tmp/admin-password --no-saml-soap-logout
 mkdir -p /var/www/html/pub
+
+ipsilon-client-install --openidc --openidc-idp-url https://idp.example.test/idp --auth-location /openidc --openidc-subject-type public
+sed '/Location/,$d' /etc/httpd/conf.d/ipsilon-openidc.conf > /data/ipsilon-openidc.global
+rm -f /etc/httpd/conf.d/ipsilon-openidc.conf
+
+ipsilon-client-install --saml-idp-metadata $SERVER_METADATA --saml-auth /app/saml-login --saml-sp-name app --saml-idp-url https://idp.example.test/idp/ --saml-sp-name app --admin-password /tmp/admin-password --no-saml-soap-logout
 rm -f /var/www/html/pub/metadata.xml
 cp -f /etc/httpd/saml2/$HOSTNAME/metadata.xml /var/www/html/pub/metadata.xml
 chmod a+r /var/www/html/pub/metadata.xml
