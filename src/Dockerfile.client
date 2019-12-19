@@ -6,6 +6,8 @@ COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr
 
 COPY http-klist-kinit-kpasswd http-server /usr/local/bin/
 
+RUN sed -i 's/^#AddressFamily any/AddressFamily inet/' /etc/ssh/sshd_config
+
 COPY ipa-client-enroll.service populate-data-volume.service setup-authorized-keys.service http-server.service /usr/lib/systemd/system/
 RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/
 RUN ln -s /usr/lib/systemd/system/sshd.service /usr/lib/systemd/system/default.target.wants/
