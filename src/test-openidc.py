@@ -5,6 +5,7 @@ from xvfbwrapper import Xvfb
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from selenium.common.exceptions import NoSuchElementException
 
 print("Admin password " + argv[1])
 
@@ -31,8 +32,11 @@ with Xvfb() as xvfb:
 	WebDriverWait(driver, 15).until(expected_conditions.url_changes(current_url))
 	print(driver.current_url)
 
-	decided_allow = driver.find_element_by_xpath("//form//button[@name = 'decided_allow']")
-	decided_allow.click()
+	try:
+		decided_allow = driver.find_element_by_xpath("//form//button[@name = 'decided_allow']")
+		decided_allow.click()
+	except NoSuchElementException:
+		pass
 
 	WebDriverWait(driver, 15).until(expected_conditions.url_to_be("https://www.example.test/"))
 	print(driver.current_url)
