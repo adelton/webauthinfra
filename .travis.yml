@@ -1,4 +1,5 @@
 language: generic
+dist: bionic
 sudo: required
 
 services:
@@ -7,6 +8,7 @@ services:
 install: true
 
 before_script:
+- docker-compose version
 - make build
 - make build COMPOSE=docker-compose.yml.www-with-app
 
