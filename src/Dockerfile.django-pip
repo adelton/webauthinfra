@@ -1,5 +1,5 @@
 FROM registry.fedoraproject.org/fedora:32
-RUN dnf install -y python3-virtualenv patch && dnf clean all
+RUN dnf install -y python3-virtualenv patch /usr/bin/systemd-tmpfiles && dnf clean all
 RUN mkdir -p /var/www/django
 RUN cd /var/www/django \
 	&& virtualenv . \
