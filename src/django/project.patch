@@ -1,5 +1,5 @@
---- project/settings.py	2018-12-17 19:17:20.974658404 +0000
-+++ project/settings.py	2018-12-17 22:21:37.605472309 +0000
+--- project/settings.py.orig	2020-11-19 18:38:07.000000000 +0000
++++ project/settings.py	2020-11-19 18:42:19.661765239 +0000
 @@ -25,7 +25,7 @@
  # SECURITY WARNING: don't run with debug turned on in production!
  DEBUG = True
@@ -35,8 +35,8 @@
  DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.sqlite3',
--        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-+        'NAME': os.path.join("/data/db", 'db.sqlite3'),
+-        'NAME': BASE_DIR / 'db.sqlite3',
++        'NAME': Path("/data/db") / 'db.sqlite3',
      }
  }
  
@@ -50,7 +50,7 @@
  USE_TZ = True
  
 @@ -118,3 +125,5 @@
- # https://docs.djangoproject.com/en/1.11/howto/static-files/
+ # https://docs.djangoproject.com/en/3.1/howto/static-files/
  
  STATIC_URL = '/static/'
 +LOGIN_REDIRECT_URL = '/'
