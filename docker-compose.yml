@@ -16,8 +16,7 @@ services:
         volumes:
             - ./ipa-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        hostname: ipa
-        domainname: example.test
+        hostname: ipa.example.test
         stop_signal: RTMIN+3
         # tty: true
     idp:
@@ -27,8 +26,7 @@ services:
         volumes:
             - ./idp-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        hostname: idp
-        domainname: example.test
+        hostname: idp.example.test
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
@@ -50,8 +48,7 @@ services:
         volumes:
             - ./www-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        hostname: www
-        domainname: example.test
+        hostname: www.example.test
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
@@ -69,8 +66,7 @@ services:
         volumes:
             - ./client-data:/data:Z
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
-        hostname: client
-        domainname: example.test
+        hostname: client.example.test
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
@@ -85,6 +81,5 @@ services:
             dockerfile: Dockerfile.django-pip
         volumes:
             - ./app-data:/data:Z
-        hostname: app
-        domainname: example.test
+        hostname: app.example.test
         stop_signal: KILL
