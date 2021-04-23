@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:33
+FROM registry.fedoraproject.org/fedora:34
 RUN dnf install -y /usr/sbin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs python3-xvfbwrapper python3-selenium xorg-x11-server-Xvfb && dnf clean all
 RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
 RUN tar xvzf geckodriver-v0.23.0-linux64.tar.gz && mv geckodriver /usr/local/bin/
