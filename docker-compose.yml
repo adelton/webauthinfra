@@ -15,7 +15,7 @@ services:
             - net.ipv6.conf.all.disable_ipv6=0
         volumes:
             - ./ipa-data:/data:Z
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: ipa.example.test
         stop_signal: RTMIN+3
         # tty: true
@@ -25,7 +25,7 @@ services:
             dockerfile: Dockerfile.idp
         volumes:
             - ./idp-data:/data:Z
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: idp.example.test
         stop_signal: RTMIN+3
         links:
@@ -47,7 +47,7 @@ services:
             # be commented out as well.
         volumes:
             - ./www-data:/data:Z
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: www.example.test
         stop_signal: RTMIN+3
         links:
@@ -65,7 +65,7 @@ services:
             dockerfile: Dockerfile.client
         volumes:
             - ./client-data:/data:Z
-            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: client.example.test
         stop_signal: RTMIN+3
         links:

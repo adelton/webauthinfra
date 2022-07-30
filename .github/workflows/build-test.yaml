@@ -9,9 +9,18 @@ on:
 
 jobs:
   test-docker-compose:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          set -e
+          sudo apt update
+          sudo apt remove -y moby-engine moby-containerd moby-runc
+          sudo apt install -y docker.io
+          echo -e "dockremap:$( id -u ):1\ndockremap:200001:65535" | sudo tee -a /etc/subuid
+          echo -e "dockremap:$( id -g ):1\ndockremap:200001:65535" | sudo tee -a /etc/subgid
+          echo '{ "userns-remap": "default" }' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
       - run: docker-compose version
       - run: make build
       - run: make build COMPOSE=docker-compose.yml.www-with-app

@@ -22,7 +22,7 @@
 +            dockerfile: Dockerfile.www-with-app
          volumes:
              - ./www-data:/data:Z
-             - /sys/fs/cgroup:/sys/fs/cgroup:ro
+             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
 @@ -56,7 +46,6 @@
          links:
              - ipa:ipa.example.test

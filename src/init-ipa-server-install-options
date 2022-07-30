@@ -32,6 +32,8 @@ if ! [ -f /etc/ipa/ca.crt -a -f $DATA/ipa-server-install-options ] ; then
 --forwarder=127.0.0.11
 --no-dnssec-validation
 --no-ntp
+--idstart 60001
+--idmax 61001
 -U
 EOS
 fi
