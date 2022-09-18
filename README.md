@@ -37,23 +37,25 @@ application that shows the effect of propagating authentication result
 and the user information to an application (**app**).
 
 ```
-                                                 HTTP with auth
-  +----------+     HTTP    +------------------+  result      +-------------+
-  | Browser  | ----------> | Web server       | -----------> | Application |
-  | "client" | <---------- + with authn/authz | <----------  | "app"       |
-  +----------+  Negotiate  | setup            |  application +-------------+
-        |          or      | "www"            |  content
-        |       redirect   +------------------+
-        |
-        \  Kerberos   +---------+
-        | ----------> | FreeIPA |
-        |             | "ipa"   |
-        |  or SAML    +---------+
-        |  or OpenID  +-----------------+
-        \    Connect  | SAML IdP or     |
-         -----------> | OpenID Provider |
-          redirects   | "idp"           |
-                      +-----------------+
+                                               HTTP with auth
+╔══════════╗     HTTP    ╔══════════════════╗  result      ╔═════════════╗
+║ Browser  ║ ──────────▶ ║ Web server       ║ ───────────▶ ║ Application ║
+║ "client" ║ ◀────────── ║ with authn/authz ║ ◀─────────── ║ "app"       ║
+╚══════════╝  Negotiate  ║ setup            ║  application ╚═════════════╝
+      │      or redirect ║ "www"            ║  content
+      │                  ╚══════════════════╝
+      │
+      │             ╔═════════╗
+      │  Kerberos   ║ FreeIPA ║
+      ├───────────▶ ║ "ipa"   ║
+      │             ╚═════════╝
+      │ or SAML
+      │ or OpenID Connect
+      │ redirects   ╔═════════════════╗
+      └───────────▶ ║ SAML IdP or     ║
+                    ║ OpenID Provider ║
+                    ║ "idp"           ║
+                    ╚═════════════════╝
 ```
 
 By changing the configuration of the Web server, it is possible to
