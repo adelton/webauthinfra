@@ -1,5 +1,8 @@
 FROM registry.fedoraproject.org/fedora:39
-RUN dnf install -y /usr/sbin/ipa-client-install /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-openidc ipsilon-infosssd sqlite openssl && dnf clean all
+RUN dnf install -y /usr/sbin/ipa-client-install /usr/sbin/ipsilon-server-install ipsilon-authform ipsilon-saml2 ipsilon-openidc ipsilon-infosssd sqlite openssl patch && dnf clean all
+# Workaround https://bugzilla.redhat.com/show_bug.cgi?id=2253761
+COPY bug-2253761.patch /tmp
+RUN patch -p0 < /tmp/bug-2253761.patch
 COPY init-data ipa-client-enroll ipsilon-server-configure ipsilon-server-wait-for-sp populate-data-volume /usr/sbin/
 COPY ipa-client-enroll.service ipsilon-server-configure.service ipsilon-server-wait-for-sp.service populate-data-volume.service /usr/lib/systemd/system/
 RUN ln -s /usr/lib/systemd/system/ipa-client-enroll.service /usr/lib/systemd/system/default.target.wants/
