@@ -18,14 +18,14 @@ jobs:
           echo -e "dockremap:$( id -g ):1\ndockremap:200001:65535" | sudo tee -a /etc/subgid
           echo '{ "userns-remap": "default" }' | sudo tee /etc/docker/daemon.json
           sudo systemctl restart docker
-      - run: docker-compose version
+      - run: docker compose version
       - run: make build
       - run: make build COMPOSE=docker-compose.yml.www-with-app
       - run: make run
       - run: make test
-      - run: docker-compose down
+      - run: docker compose down
       - run: make run
       - run: make test
-      - run: docker-compose down
+      - run: docker compose down
       - run: make run COMPOSE=docker-compose.yml.www-with-app
       - run: make test

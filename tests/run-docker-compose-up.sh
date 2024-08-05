@@ -1,11 +1,12 @@
 #!/bin/bash
 
 set -e
+DOCKER_COMPOSE=${DOCKER_COMPOSE:docker-compose}
 
 if test -n "$COMPOSE" ; then
-	docker-compose --file $COMPOSE up &
+	$DOCKER_COMPOSE --file $COMPOSE up &
 else
-	docker-compose up &
+	$DOCKER_COMPOSE up &
 fi
 
 while ! docker ps | grep webauthinfra_www ; do
