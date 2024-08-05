@@ -9,10 +9,10 @@ else
 	$DOCKER_COMPOSE up &
 fi
 
-while ! docker ps | grep webauthinfra_www ; do
+while ! docker ps | grep webauthinfra.www ; do
 	sleep 5
 done
-docker ps | grep webauthinfra_www | awk '{ print $NF }' | while read i ; do
+docker ps | grep webauthinfra.www | awk '{ print $NF }' | while read i ; do
 	while true ; do
 		sleep 10
 		echo -n "test | Waiting for $i to initialize ... " >&2
@@ -22,10 +22,10 @@ docker ps | grep webauthinfra_www | awk '{ print $NF }' | while read i ; do
 	done
 done
 
-while ! docker ps | grep webauthinfra_client ; do
+while ! docker ps | grep webauthinfra.client ; do
 	sleep 5
 done
-docker ps | grep webauthinfra_client | awk '{ print $NF }' | while read i ; do
+docker ps | grep webauthinfra.client | awk '{ print $NF }' | while read i ; do
 	while true ; do
 		sleep 10
 		echo -n "test | Waiting for $i to initialize ... " >&2

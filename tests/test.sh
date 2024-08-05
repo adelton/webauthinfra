@@ -3,9 +3,9 @@
 set -e
 set -x
 
-WWW=$( docker ps | grep webauthinfra_www | awk '{ print $NF }' )
-WWWAPP=$( docker ps | grep webauthinfra_wwwapp | awk '{ print $NF }' )
-CLIENT=$( docker ps | grep webauthinfra_client | awk '{ print $NF }' )
+WWW=$( docker ps | grep webauthinfra.www | awk '{ print $NF }' )
+WWWAPP=$( docker ps | grep webauthinfra.wwwapp | awk '{ print $NF }' )
+CLIENT=$( docker ps | grep webauthinfra.client | awk '{ print $NF }' )
 
 if test -n "$WWWAPP" ; then
 	docker cp src/www-mod_wsgi-gssapi.conf $WWWAPP:/data/www.conf
