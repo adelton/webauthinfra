@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:43
+FROM registry.fedoraproject.org/fedora:rawhide
 RUN dnf install -y /usr/bin/ipa-client-install openssh-server xauth firefox dejavu-sans-fonts dejavu-sans-mono-fonts /usr/bin/xargs python3-xvfbwrapper python3-selenium python3-legacy-cgi xorg-x11-server-Xvfb && dnf clean all
 COPY sssd-ownership.conf /usr/lib/tmpfiles.d/
 RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
