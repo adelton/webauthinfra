@@ -14,7 +14,7 @@ RUN ln -s www-proxy-gssapi.conf.sample /etc/httpd/conf.d/www-default.conf.sample
 RUN ln -s /data/www.conf /etc/httpd/conf.d/www.conf
 ENV container docker
 VOLUME [ "/tmp", "/run", "/data" ]
-ENTRYPOINT /usr/sbin/init-data
+ENTRYPOINT [ "/usr/sbin/init-data" ]
 
 RUN dnf install -y python3-virtualenv python3-mod_wsgi patch && dnf clean all
 RUN mkdir -p /var/www/django

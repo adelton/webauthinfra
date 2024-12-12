@@ -30,4 +30,4 @@ RUN groupadd -g 456 developer \
 
 ENV container docker
 VOLUME [ "/tmp", "/run", "/data" ]
-ENTRYPOINT /usr/sbin/init-data
+ENTRYPOINT [ "/usr/sbin/init-data" ]

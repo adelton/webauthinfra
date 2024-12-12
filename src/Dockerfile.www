@@ -14,4 +14,4 @@ RUN ln -s www-proxy-gssapi.conf.sample /etc/httpd/conf.d/www-default.conf.sample
 RUN ln -s /data/www.conf /etc/httpd/conf.d/www.conf
 ENV container docker
 VOLUME [ "/tmp", "/run", "/data" ]
-ENTRYPOINT /usr/sbin/init-data
+ENTRYPOINT [ "/usr/sbin/init-data" ]
