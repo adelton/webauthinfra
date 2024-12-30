@@ -1,8 +1,8 @@
---- docker-compose.yml	2018-12-11 09:09:16.638080854 +0100
-+++ docker-compose.yml.www-with-app	2018-12-11 10:36:01.788270676 +0100
-@@ -33,20 +33,10 @@
-         links:
-             - ipa:ipa.example.test
+--- docker-compose.yml	2025-01-07 13:24:30.383332565 +0100
++++ docker-compose.yml.www-with-app	2025-01-07 13:45:34.152136298 +0100
+@@ -34,20 +34,10 @@
+         cap_add:
+             - DAC_READ_SEARCH
          # tty: true
 -    www:
 +    wwwapp:
@@ -28,10 +28,10 @@
              - ipa:ipa.example.test
              - idp:idp.example.test
 -            - app:app.example.test
+         cap_add:
+             - DAC_READ_SEARCH
          # Uncomment the following if you want to be able to access the
-         # www container on host's interface as well.
-         # ports:
-@@ -75,15 +64,6 @@
+@@ -76,17 +65,8 @@
          links:
              - ipa:ipa.example.test
              - idp:idp.example.test
@@ -39,6 +39,8 @@
 +            - wwwapp:www.example.test
          ports:
              - "55022:22"
+         cap_add:
+             - DAC_READ_SEARCH
 -    app:
 -        build:
 -            context: ./src

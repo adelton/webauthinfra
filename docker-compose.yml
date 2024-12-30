@@ -17,6 +17,8 @@ services:
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: ipa.example.test
         stop_signal: RTMIN+3
+        cap_add:
+            - DAC_READ_SEARCH
         # tty: true
     idp:
         build:
@@ -29,6 +31,8 @@ services:
         stop_signal: RTMIN+3
         links:
             - ipa:ipa.example.test
+        cap_add:
+            - DAC_READ_SEARCH
         # tty: true
     www:
         build:
@@ -53,6 +57,8 @@ services:
             - ipa:ipa.example.test
             - idp:idp.example.test
             - app:app.example.test
+        cap_add:
+            - DAC_READ_SEARCH
         # Uncomment the following if you want to be able to access the
         # www container on host's interface as well.
         # ports:
@@ -73,6 +79,8 @@ services:
             - www:www.example.test
         ports:
             - "55022:22"
+        cap_add:
+            - DAC_READ_SEARCH
     app:
         build:
             context: ./src
