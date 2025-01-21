@@ -1,6 +1,6 @@
---- docker-compose.yml	2025-01-07 13:24:30.383332565 +0100
-+++ docker-compose.yml.www-with-app	2025-01-07 13:45:34.152136298 +0100
-@@ -34,20 +34,10 @@
+--- docker-compose.yml	2025-02-08 21:41:16.170778265 +0100
++++ docker-compose.yml.www-with-app	2025-02-08 21:41:37.944903088 +0100
+@@ -32,20 +32,10 @@
          cap_add:
              - DAC_READ_SEARCH
          # tty: true
@@ -23,21 +23,7 @@
          volumes:
              - ./www-data:/data:Z
              # - /sys/fs/cgroup:/sys/fs/cgroup:ro
-@@ -56,7 +46,6 @@
-         links:
-             - ipa:ipa.example.test
-             - idp:idp.example.test
--            - app:app.example.test
-         cap_add:
-             - DAC_READ_SEARCH
-         # Uncomment the following if you want to be able to access the
-@@ -76,17 +65,8 @@
-         links:
-             - ipa:ipa.example.test
-             - idp:idp.example.test
--            - www:www.example.test
-+            - wwwapp:www.example.test
-         ports:
+@@ -71,12 +61,3 @@
              - "55022:22"
          cap_add:
              - DAC_READ_SEARCH

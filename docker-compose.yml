@@ -29,8 +29,6 @@ services:
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: idp.example.test
         stop_signal: RTMIN+3
-        links:
-            - ipa:ipa.example.test
         cap_add:
             - DAC_READ_SEARCH
         # tty: true
@@ -53,10 +51,6 @@ services:
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: www.example.test
         stop_signal: RTMIN+3
-        links:
-            - ipa:ipa.example.test
-            - idp:idp.example.test
-            - app:app.example.test
         cap_add:
             - DAC_READ_SEARCH
         # Uncomment the following if you want to be able to access the
@@ -73,10 +67,6 @@ services:
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         hostname: client.example.test
         stop_signal: RTMIN+3
-        links:
-            - ipa:ipa.example.test
-            - idp:idp.example.test
-            - www:www.example.test
         ports:
             - "55022:22"
         cap_add:
