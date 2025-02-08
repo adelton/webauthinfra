@@ -29,5 +29,5 @@ RUN groupadd -g 456 developer \
 	&& chown -R developer:developer /home/developer
 
 ENV container docker
-VOLUME [ "/tmp", "/run", "/data" ]
+VOLUME [ "/data" ]
 ENTRYPOINT [ "/usr/sbin/init-data" ]

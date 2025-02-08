@@ -15,6 +15,9 @@ services:
         volumes:
             - ./ipa-data:/data:Z
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        tmpfs:
+            - /run
+            - /tmp
         hostname: ipa.example.test
         dns: 127.0.0.1
         stop_signal: RTMIN+3
@@ -28,6 +31,9 @@ services:
         volumes:
             - ./idp-data:/data:Z
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        tmpfs:
+            - /run
+            - /tmp
         hostname: idp.example.test
         stop_signal: RTMIN+3
         cap_add:
@@ -50,6 +56,9 @@ services:
         volumes:
             - ./www-data:/data:Z
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        tmpfs:
+            - /run
+            - /tmp
         hostname: www.example.test
         stop_signal: RTMIN+3
         cap_add:
@@ -66,6 +75,9 @@ services:
         volumes:
             - ./client-data:/data:Z
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        tmpfs:
+            - /run
+            - /tmp
         hostname: client.example.test
         stop_signal: RTMIN+3
         ports:
