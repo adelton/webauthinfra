@@ -10,5 +10,5 @@ RUN ln -s /data /var/www/html/pub
 COPY app.pam-service /etc/pam.d/idp
 COPY volume-data-list /etc/
 ENV container docker
-VOLUME [ "/tmp", "/run", "/data" ]
+VOLUME [ "/data" ]
 ENTRYPOINT [ "/usr/sbin/init-data" ]

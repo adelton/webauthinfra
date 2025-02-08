@@ -18,11 +18,6 @@ if [ "$$" -eq 1 ] ; then
 	if ! [ -s /etc/machine-id ] ; then
 		uuidgen | sed 's/-//g' > /etc/machine-id
 	fi
-	for i in /run/* /tmp/* ; do
-		if [ -e "$i" -a "$i" != '/run/secrets' ] ; then
-			rm -rf "$i"
-		fi
-	done
 
 	systemd-tmpfiles --remove --create
 else

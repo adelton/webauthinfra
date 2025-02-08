@@ -14,12 +14,6 @@ if [ "$HOSTNAME" != "$UNAME" -a "$HOSTNAME" == "${UNAME%%.*}" ] ; then
 	HOSTNAME="$UNAME"
 fi
 
-for i in /run/* /tmp/* ; do
-	if [ -e "$i" -a "$i" != '/run/secrets' ] ; then
-		rm -rf "$i"
-	fi
-done
-
 if [ -f /data/volume-version ] ; then
 	sed 's%^/%%' /etc/volume-data-list | while read f ; do [ -e /data/$f -o -L /data/$f ] && echo $f ; done | ( cd /data && xargs cp --parents -rp -t / )
 fi
