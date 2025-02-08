@@ -28,6 +28,5 @@ RUN groupadd -g 456 developer \
 	&& echo 'export LIBGL_ALWAYS_INDIRECT=y' >> /home/developer/.bashrc \
 	&& chown -R developer:developer /home/developer
 
-ENV container docker
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/usr/sbin/init-data" ]

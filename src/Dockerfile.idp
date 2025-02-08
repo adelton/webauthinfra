@@ -9,6 +9,5 @@ RUN ln -s /usr/lib/systemd/system/populate-data-volume.service /usr/lib/systemd/
 RUN ln -s /data /var/www/html/pub
 COPY app.pam-service /etc/pam.d/idp
 COPY volume-data-list /etc/
-ENV container docker
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/usr/sbin/init-data" ]

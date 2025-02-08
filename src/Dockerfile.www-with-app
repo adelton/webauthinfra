@@ -12,7 +12,6 @@ COPY www-proxy-gssapi.conf /etc/httpd/conf.d/www-proxy-gssapi.conf.sample
 COPY www-proxy-saml.conf /etc/httpd/conf.d/www-proxy-saml.conf.sample
 RUN ln -s www-proxy-gssapi.conf.sample /etc/httpd/conf.d/www-default.conf.sample
 RUN ln -s /data/www.conf /etc/httpd/conf.d/www.conf
-ENV container docker
 VOLUME [ "/data" ]
 ENTRYPOINT [ "/usr/sbin/init-data" ]
 
