@@ -28,4 +28,4 @@ jobs:
       - run: make test
       - run: make stop
       - run: make run COMPOSE=docker-compose.yml.www-with-app
-      - run: make test
+      - run: make test COMPOSE=docker-compose.yml.www-with-app
