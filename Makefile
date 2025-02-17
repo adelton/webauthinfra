@@ -23,7 +23,7 @@ run:
 	DOCKER_COMPOSE="$(DOCKER_COMPOSE)" tests/run-docker-compose-up.sh
 
 test:
-	tests/test.sh
+	DOCKER_COMPOSE="$(DOCKER_COMPOSE)" tests/test.sh
 
 stop: $(COMPOSE)
 	$(DOCKER_COMPOSE) down
