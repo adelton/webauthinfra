@@ -1,0 +1,13 @@
+[Unit]
+Description=Force nameserver in resolv.conf to be 127.0.0.1
+Before=ipa.service
+Before=ipa-server-configure-first.service
+Before=ipa-server-update-self-ip-address.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'echo nameserver 127.0.0.1 > /etc/resolv.conf'
+RemainAfterExit=true
+
+[Install]
+WantedBy=container-ipa.target
