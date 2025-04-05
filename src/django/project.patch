@@ -26,7 +26,7 @@
      'django.middleware.common.CommonMiddleware',
      'django.middleware.csrf.CsrfViewMiddleware',
      'django.contrib.auth.middleware.AuthenticationMiddleware',
-+    'project.middleware.auth.PersistentRemoteUserMiddleware',
++    'identity.external.PersistentRemoteUserMiddlewareVar',
 +    'identity.external.RemoteUserAttrMiddleware',
      'django.contrib.messages.middleware.MessageMiddleware',
      'django.middleware.clickjacking.XFrameOptionsMiddleware',
