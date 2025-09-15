@@ -21,8 +21,18 @@ fi
 DOMAIN=example.test
 IPA=ipa.$DOMAIN
 
-IPA_IP_FROM_DOCKER=$( host $IPA | awk '/has address (.+)/ { print $4; exit}' )
-
+i=0
+while true ; do
+	IPA_IP_FROM_DOCKER=$( host $IPA | awk '/has address (.+)/ { print $4; exit}' )
+	if [ -n "$IPA_IP_FROM_DOCKER" ] ; then
+		break
+	fi
+	if [ "$(( i % 20 ))" -eq 0 ] ; then
+		echo "Waiting for ipa resolution with original DNS server ..."
+	fi
+	i=$(( i + 1 ))
+	sleep 1
+done
 i=0
 while ! curl -fs http://$IPA/ipa/config/ca.crt &> /dev/null ; do
 	if [ "$(( i % 20 ))" -eq 0 ] ; then
