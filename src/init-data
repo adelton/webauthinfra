@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016--2017 Jan Pazdziora
+# Copyright 2016--2025 Jan Pazdziora
 #
 # Licensed under the Apache License, Version 2.0 (the "License").
 
@@ -40,6 +40,7 @@ while ! dig NS example.test &> /dev/null ; do
 	sleep 1
 done
 
+grep '^nameserver ' /etc/resolv.conf > /etc/resolv.conf.orig
 echo "nameserver $IPA_IP_FROM_DOCKER" > /etc/resolv.conf
 echo "Pointing resolv.conf at $HOSTNAME to $IPA_IP_FROM_DOCKER"
 
