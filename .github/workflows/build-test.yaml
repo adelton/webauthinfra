@@ -29,3 +29,6 @@ jobs:
       - run: make stop
       - run: make run COMPOSE=docker-compose.yml.www-with-app
       - run: make test
+      - name: Setup upterm session for debugging upon failure
+        uses: owenthereal/action-upterm@v1
+        if: failure()
