@@ -50,9 +50,6 @@ services:
             #
             # dockerfile: Dockerfile.www-with-app
             #
-            # If you use Dockerfile.www-with-app, the link to app
-            # service and the whole app service definition below can
-            # be commented out as well.
         volumes:
             - ./www-data:/data:Z
             # - /sys/fs/cgroup:/sys/fs/cgroup:ro
