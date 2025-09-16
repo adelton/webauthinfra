@@ -3,13 +3,8 @@
 set -e
 DOCKER_COMPOSE=${DOCKER_COMPOSE:-docker-compose}
 
-if test -n "$COMPOSE" ; then
-	$DOCKER_COMPOSE --file $COMPOSE up -d
-	$DOCKER_COMPOSE --file $COMPOSE logs -f &
-else
-	$DOCKER_COMPOSE up -d
-	$DOCKER_COMPOSE logs -f &
-fi
+$DOCKER_COMPOSE up -d
+$DOCKER_COMPOSE logs -f &
 
 while ! docker ps | grep webauthinfra.www ; do
 	sleep 5
