@@ -17,6 +17,7 @@ fi
 if [ -f /data/volume-version ] ; then
 	sed 's%^/%%' /etc/volume-data-list | while read f ; do [ -e /data/$f -o -L /data/$f ] && echo $f ; done | ( cd /data && xargs cp --parents -rp -t / )
 fi
+systemd-tmpfiles --remove --create
 
 DOMAIN=example.test
 IPA=ipa.$DOMAIN
