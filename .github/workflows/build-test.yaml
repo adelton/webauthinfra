@@ -23,9 +23,9 @@ jobs:
       - run: make build COMPOSE=docker-compose.yml.www-with-app
       - run: make run
       - run: make test
-      - run: docker compose down
+      - run: make stop
       - run: make run
       - run: make test
-      - run: docker compose down
+      - run: make stop
       - run: make run COMPOSE=docker-compose.yml.www-with-app
       - run: make test

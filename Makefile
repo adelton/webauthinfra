@@ -6,17 +6,27 @@ ifndef DOCKER_COMPOSE
 	DOCKER_COMPOSE := docker compose
 endif
 
+ifdef COMPOSE
+	override DOCKER_COMPOSE += --file $(COMPOSE)
+endif
+
+all: build run test stop
+
 docker-compose.yml.www-with-app:
 	 cp docker-compose.yml docker-compose.yml.www-with-app
 	 patch docker-compose.yml.www-with-app < docker-compose.yml.www-with-app.patch
 
 build: $(COMPOSE)
-	if test -n "$(COMPOSE)" ; then $(DOCKER_COMPOSE) --file "$(COMPOSE)" build ; fi
-	if test -z "$(COMPOSE)" ; then $(DOCKER_COMPOSE) build ; fi
+	$(DOCKER_COMPOSE) build
 
 run:
-	DOCKER_COMPOSE="$(DOCKER_COMPOSE)" tests/run-docker-compose-up.sh $(COMPOSE)
+	DOCKER_COMPOSE="$(DOCKER_COMPOSE)" tests/run-docker-compose-up.sh
 
 test:
 	tests/test.sh
+
+stop: $(COMPOSE)
+	$(DOCKER_COMPOSE) down
+
+.PHONY: build run test stop
 
