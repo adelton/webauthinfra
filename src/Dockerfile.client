@@ -3,6 +3,8 @@ RUN dnf install -y /usr/bin/ipa-client-install openssh-server xauth firefox deja
 COPY sssd-ownership.conf /usr/lib/tmpfiles.d/
 RUN curl -LO https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz
 RUN tar xvzf geckodriver-v0.34.0-linux64.tar.gz && mv geckodriver /usr/local/bin/
+RUN systemctl mask var-lib-nfs-rpc_pipefs.mount dnf-makecache.service rtkit-daemon.service systemd-resolved.service upower.service
+
 COPY init-data ipa-client-enroll populate-data-volume setup-authorized-keys /usr/sbin/
 
 COPY http-klist-kinit-kpasswd http-server /usr/local/bin/
