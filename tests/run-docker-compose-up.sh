@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-DOCKER_COMPOSE=${DOCKER_COMPOSE:docker-compose}
+DOCKER_COMPOSE=${DOCKER_COMPOSE:-docker-compose}
 
 if test -n "$COMPOSE" ; then
 	$DOCKER_COMPOSE --file $COMPOSE up -d
