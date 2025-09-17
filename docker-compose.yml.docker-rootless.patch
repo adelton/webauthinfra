@@ -1,0 +1,68 @@
+diff --git a/docker-compose.yml b/docker-compose.yml
+index e4bb26b..c1f27cd 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -14,6 +14,7 @@ services:
+             - net.ipv6.conf.all.disable_ipv6=0
+         volumes:
+             - ./ipa-data:/data:Z
++            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+         tmpfs:
+             - /run
+             - /tmp
+@@ -22,6 +23,7 @@ services:
+         stop_signal: RTMIN+3
+         cap_add:
+             - DAC_READ_SEARCH
++        cgroup: host
+         # tty: true
+     idp:
+         build:
+@@ -29,6 +31,7 @@ services:
+             dockerfile: Dockerfile.idp
+         volumes:
+             - ./idp-data:/data:Z
++            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+         tmpfs:
+             - /run
+             - /tmp
+@@ -36,6 +39,7 @@ services:
+         stop_signal: RTMIN+3
+         cap_add:
+             - DAC_READ_SEARCH
++        cgroup: host
+         # tty: true
+     www:
+         build:
+@@ -50,6 +54,7 @@ services:
+             #
+         volumes:
+             - ./www-data:/data:Z
++            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+         tmpfs:
+             - /run
+             - /tmp
+@@ -57,6 +62,7 @@ services:
+         stop_signal: RTMIN+3
+         cap_add:
+             - DAC_READ_SEARCH
++        cgroup: host
+         # Uncomment the following if you want to be able to access the
+         # www container on host's interface as well.
+         # ports:
+@@ -68,6 +74,7 @@ services:
+             dockerfile: Dockerfile.client
+         volumes:
+             - ./client-data:/data:Z
++            - /sys/fs/cgroup:/sys/fs/cgroup:rw
+         tmpfs:
+             - /run
+             - /tmp
+@@ -77,6 +84,7 @@ services:
+             - "55022:22"
+         cap_add:
+             - DAC_READ_SEARCH
++        cgroup: host
+     app:
+         build:
+             context: ./src

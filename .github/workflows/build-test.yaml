@@ -29,3 +29,34 @@ jobs:
       - run: make stop
       - run: make run COMPOSE=docker-compose.yml.www-with-app
       - run: make test
+
+  test-rootless-docker-compose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo systemctl disable --now docker.service docker.socket
+      - run: |
+          cat <<EOT | sudo tee "/etc/apparmor.d/home.runner.bin.rootlesskit"
+          # ref: https://ubuntu.com/blog/ubuntu-23-10-restricted-unprivileged-user-namespaces
+          abi <abi/4.0>,
+          include <tunables/global>
+          /home/runner/bin/rootlesskit flags=(unconfined) {
+            userns,
+            # Site-specific additions and overrides. See local/README for details.
+            include if exists <local/home.runner.bin.rootlesskit>
+          }
+          EOT
+          sudo systemctl restart apparmor.service
+      - run: curl -fsSL https://get.docker.com/rootless | FORCE_ROOTLESS_INSTALL=1 sh
+      - run: docker compose version
+      - run: patch docker-compose.yml < docker-compose.yml.docker-rootless.patch
+      - run: make build
+      - run: make build COMPOSE=docker-compose.yml.www-with-app
+      - run: make run
+      - run: make test
+      - run: make stop
+      - run: make run
+      - run: make test
+      - run: make stop
+      - run: make run COMPOSE=docker-compose.yml.www-with-app
+      - run: make test
