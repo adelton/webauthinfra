@@ -5,6 +5,11 @@ endif
 ifndef DOCKER_COMPOSE
 	DOCKER_COMPOSE := docker compose
 endif
+ifneq (,$(findstring podman-compose,$(DOCKER_COMPOSE)))
+	ifeq (,$(findstring --systemd,$(DOCKER_COMPOSE)))
+		override DOCKER_COMPOSE += --podman-run-args=--systemd=always
+	endif
+endif
 
 ifdef COMPOSE
 	override DOCKER_COMPOSE += --file $(COMPOSE)
