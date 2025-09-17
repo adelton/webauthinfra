@@ -14,7 +14,6 @@ services:
             - net.ipv6.conf.all.disable_ipv6=0
         volumes:
             - ./ipa-data:/data:Z
-            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         tmpfs:
             - /run
             - /tmp
@@ -30,7 +29,6 @@ services:
             dockerfile: Dockerfile.idp
         volumes:
             - ./idp-data:/data:Z
-            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         tmpfs:
             - /run
             - /tmp
@@ -52,7 +50,6 @@ services:
             #
         volumes:
             - ./www-data:/data:Z
-            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         tmpfs:
             - /run
             - /tmp
@@ -71,7 +68,6 @@ services:
             dockerfile: Dockerfile.client
         volumes:
             - ./client-data:/data:Z
-            # - /sys/fs/cgroup:/sys/fs/cgroup:ro
         tmpfs:
             - /run
             - /tmp
