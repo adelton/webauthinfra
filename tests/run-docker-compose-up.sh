@@ -6,9 +6,6 @@ DOCKER_COMPOSE=${DOCKER_COMPOSE:-docker-compose}
 $DOCKER_COMPOSE up -d
 $DOCKER_COMPOSE logs -f &
 
-while ! docker ps | grep webauthinfra.www ; do
-	sleep 5
-done
 docker ps | grep webauthinfra.www | awk '{ print $NF }' | while read i ; do
 	while true ; do
 		sleep 10
@@ -19,9 +16,6 @@ docker ps | grep webauthinfra.www | awk '{ print $NF }' | while read i ; do
 	done
 done
 
-while ! docker ps | grep webauthinfra.client ; do
-	sleep 5
-done
 docker ps | grep webauthinfra.client | awk '{ print $NF }' | while read i ; do
 	while true ; do
 		sleep 10
