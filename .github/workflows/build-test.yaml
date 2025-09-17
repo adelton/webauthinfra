@@ -29,3 +29,20 @@ jobs:
       - run: make stop
       - run: make run COMPOSE=docker-compose.yml.www-with-app
       - run: make test COMPOSE=docker-compose.yml.www-with-app
+
+  test-podman-compose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip3 install podman-compose
+      - run: podman-compose version
+      - run: make build DOCKER_COMPOSE=podman-compose
+      - run: make build DOCKER_COMPOSE=podman-compose COMPOSE=docker-compose.yml.www-with-app
+      - run: make run DOCKER_COMPOSE=podman-compose
+      - run: make test DOCKER_COMPOSE=podman-compose
+      - run: make stop DOCKER_COMPOSE=podman-compose
+      - run: make run DOCKER_COMPOSE=podman-compose
+      - run: make test DOCKER_COMPOSE=podman-compose
+      - run: make stop DOCKER_COMPOSE=podman-compose
+      - run: make run DOCKER_COMPOSE=podman-compose COMPOSE=docker-compose.yml.www-with-app
+      - run: make test DOCKER_COMPOSE=podman-compose COMPOSE=docker-compose.yml.www-with-app
