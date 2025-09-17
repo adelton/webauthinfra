@@ -4,7 +4,10 @@ set -e
 DOCKER_COMPOSE=${DOCKER_COMPOSE:-docker-compose}
 
 $DOCKER_COMPOSE up -d
-$DOCKER_COMPOSE logs -f &
+if [[ "$DOCKER_COMPOSE" =~ podman-compose ]] ; then
+	LOGS_OPTS=-n
+fi
+$DOCKER_COMPOSE logs $LOGS_OPTS -f &
 set +e
 
 RESULT=true
