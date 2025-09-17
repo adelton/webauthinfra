@@ -9,7 +9,9 @@ set +e
 
 RESULT=true
 $DOCKER_COMPOSE config --services | grep -vF app | while read s ; do
-	while ! $DOCKER_COMPOSE ps $s > /dev/null ; do
+	while ! if [[ "$DOCKER_COMPOSE" =~ podman-compose ]] ; then
+		$DOCKER_COMPOSE ps --format json | jq -r --arg service $s '.[].Labels["com.docker.compose.service"] | select(. == $service)'
+		else $DOCKER_COMPOSE ps $s ; fi | grep -q . ; do
 		sleep 5
 	done
 	STATUS=offline
