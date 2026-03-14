@@ -11,7 +11,7 @@ jobs:
   test-docker-compose:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: |
           set -e
           echo -e "dockremap:$( id -u ):1\ndockremap:200001:65535" | sudo tee -a /etc/subuid
