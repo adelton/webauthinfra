@@ -1,5 +1,5 @@
---- project/settings.py.orig	2025-12-05 15:33:03.873308781 +0000
-+++ project/settings.py	2025-12-05 16:19:28.617210612 +0000
+--- project/settings.py.orig	2026-08-11 07:29:52.000000000 +0000
++++ project/settings.py	2026-08-11 07:39:49.637932021 +0000
 @@ -25,7 +25,7 @@
  # SECURITY WARNING: don't run with debug turned on in production!
  DEBUG = True
@@ -49,10 +49,11 @@
  USE_TZ = True
  
  
-@@ -115,3 +124,6 @@
- # https://docs.djangoproject.com/en/6.0/howto/static-files/
- 
- STATIC_URL = 'static/'
+@@ -125,3 +134,7 @@
+         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+     },
+ }
++
 +
 +LOGIN_REDIRECT_URL = '/'
 +DATETIME_FORMAT = 'N j, Y, H:i:s'
